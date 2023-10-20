@@ -8,4 +8,6 @@ module xyz.xmit.silverclient {
 
     opens xyz.xmit.silverclient to javafx.fxml;
     exports xyz.xmit.silverclient;
+    exports xyz.xmit.silverclient.controllers;
+    opens xyz.xmit.silverclient.controllers to javafx.fxml;
 }

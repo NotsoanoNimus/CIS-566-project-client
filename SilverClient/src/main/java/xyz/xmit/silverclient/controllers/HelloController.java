@@ -1,4 +1,4 @@
-package xyz.xmit.silverclient;
+package xyz.xmit.silverclient.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
