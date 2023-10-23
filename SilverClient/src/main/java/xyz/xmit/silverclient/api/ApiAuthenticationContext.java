@@ -8,6 +8,10 @@ public final class ApiAuthenticationContext
 
     private String password;
 
+    public ApiAuthenticationContext(String username, String password) {
+        this(username, password, "MilkAndEggs");
+    }
+
     public ApiAuthenticationContext(String username, String password, String apiKey) {
         this.username = username;
         this.password = password;
