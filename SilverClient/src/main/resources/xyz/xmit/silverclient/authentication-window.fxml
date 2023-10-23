@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<VBox
-        alignment="CENTER"
-        maxHeight="-Infinity"
-        maxWidth="-Infinity"
-        minHeight="-Infinity"
-        minWidth="-Infinity"
-        prefHeight="687.0"
-        prefWidth="978.0"
-        spacing="20.0"
-        fx:controller="xyz.xmit.silverclient.controllers.AuthenticationController"
-        xmlns="http://javafx.com/javafx/17.0.2-ea"
-        xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="687.0" prefWidth="978.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.xmit.silverclient.controllers.AuthenticationController">
+   <children>
+      <TextField id="someText" />
+      <Button mnemonicParsing="false" onMouseClicked="#TryDelete" text="Button" />
+   </children>
 </VBox>

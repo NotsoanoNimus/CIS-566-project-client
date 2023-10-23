@@ -16,8 +16,10 @@ public abstract class BaseApiRequest
         return this.method;
     }
 
-    public void setMethod(String method) {
+    public BaseApiRequest setMethod(String method) {
         this.method = method;
+
+        return this;
     }
 
     @Override
@@ -25,7 +27,9 @@ public abstract class BaseApiRequest
         return this.targetHost;
     }
 
-    public void setHostUrl(String url) {
+    public BaseApiRequest setHostUrl(String url) {
         this.targetHost = url;
+
+        return this;
     }
 }
