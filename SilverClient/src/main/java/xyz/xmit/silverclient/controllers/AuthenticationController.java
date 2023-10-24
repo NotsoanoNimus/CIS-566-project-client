@@ -2,16 +2,23 @@ package xyz.xmit.silverclient.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
+import xyz.xmit.silverclient.SilverLibraryApplication;
 import xyz.xmit.silverclient.api.ApiAuthenticationContext;
 import xyz.xmit.silverclient.api.HttpApiClient;
 import xyz.xmit.silverclient.api.request.AuthorRequest;
 
-public class AuthenticationController
+public final class AuthenticationController
 {
     @FXML
-    private Button bButton;
+    private ImageView logoImage;
 
     @FXML
     private TextField tfUsername;
@@ -23,22 +30,38 @@ public class AuthenticationController
     private Button bLogin;
 
     @FXML
-    protected void TryDelete()
+    private Label lLoginStatus;
+
+    private void toggleFormLock(boolean isLocked)
     {
-        try {
-            System.out.println("Deleting");
-            HttpApiClient.getInstance().DeleteAsync(new AuthorRequest());
-            System.out.println("OK");
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        this.bLogin.setDisable(isLocked);
+        this.tfUsername.setDisable(isLocked);
+        this.tfPassword.setDisable(isLocked);
     }
 
-    protected void tryLogin()
+    @FXML
+    public void tryLogin()
     {
-        HttpApiClient.getInstance().tryLogin(
-                this.tfUsername.getText().trim().toLowerCase(), this.tfPassword.getText());
+        this.toggleFormLock(true);
 
+        try {
+            var apiResponse = HttpApiClient.getInstance().tryLogin(
+                    this.tfUsername.getText().trim().toLowerCase(), this.tfPassword.getText());
+
+            this.lLoginStatus.setTextFill(apiResponse.getSuccess() ? Color.GREEN : Color.DARKRED);
+            this.lLoginStatus.setText(apiResponse.getData());
+        } catch (Exception ex) {
+            //
+        }
+
+        this.toggleFormLock(false);
+    }
+
+    @FXML
+    public void submitLoginOnEnter(KeyEvent e)
+    {
+        if (e.getCode() == KeyCode.ENTER) {
+            this.tryLogin();
+        }
     }
 }

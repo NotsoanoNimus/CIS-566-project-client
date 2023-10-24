@@ -1,0 +1,8 @@
+.root {
+    -fx-background-color: #D0AF89;
+}
+
+#lLoginStatus {
+    -fx-font-weight: bold;
+    -fx-font-family: monospace;
+}

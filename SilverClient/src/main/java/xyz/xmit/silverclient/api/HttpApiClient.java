@@ -1,15 +1,15 @@
 package xyz.xmit.silverclient.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import xyz.xmit.silverclient.api.request.BaseApiRequest;
 import xyz.xmit.silverclient.api.request.GenericGetRequest;
-import xyz.xmit.silverclient.api.response.BaseApiResponse;
-import xyz.xmit.silverclient.api.response.GenericSuccessResponse;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.security.cert.X509Certificate;
 
@@ -58,32 +58,59 @@ public final class HttpApiClient
         this.authenticationContext = authenticationContext;
     }
 
-    public synchronized boolean tryLogin(String username, String password)
+    private WrappedApiResponse readWrappedApiResponseOrDie(HttpsURLConnection connection)
+            throws Exception
     {
-        String apiKey = "";
+        connection.connect();
+
+        var responseCode = connection.getResponseCode();
+        var responseMessage = connection.getResponseMessage();
+
+        var response = responseCode < HttpURLConnection.HTTP_BAD_REQUEST
+            ? new String(connection.getInputStream().readAllBytes())
+            : new String(connection.getErrorStream().readAllBytes());
+
+        System.out.println("Connection Response: " + responseCode + " - " + responseMessage);
+        System.out.println(response + "\n-----");
+
+        // Need to be able to fall back to an acceptable Wrapper API response in the event
+        //   that a server error does not come back in the deserializable JSON format we expect.
+        return responseCode < HttpURLConnection.HTTP_BAD_REQUEST
+            ? new WrappedApiResponse(response)
+            : new WrappedApiResponse(response, false, responseMessage);
+    }
+
+    public synchronized WrappedApiResponse tryLogin(String username, String password)
+    {
+        String apiKey;
+        WrappedApiResponse responseObject;
 
         try {
             var connection = HttpConnectionFactory.CreateSecure(
-                    new GenericGetRequest().setMethod("GET").setHostUrl(""),
+                    new GenericGetRequest().setMethod("GET").setHostUrl("delegate"),
                     new ApiAuthenticationContext(username, password));
 
-            connection.connect();
+            responseObject = this.readWrappedApiResponseOrDie(connection);
 
-            var responseCode = connection.getResponseCode();
-            var responseMessage = connection.getResponseMessage();
+            if (!responseObject.getSuccess()) {
+                return responseObject;
+            }
         } catch (Exception ex) {
             System.out.println("Failed to establish authentication request.");
+            ex.printStackTrace();
 
-            return false;
+            return new WrappedApiResponse(false, "An error occurred while trying to authenticate.");
         }
+
+        apiKey = responseObject.getData();
 
         instance.setAuthenticationContext(new ApiAuthenticationContext(username, password, apiKey));
 
         System.out.println("Logged in as: " + username);
-        return true;
+        return new WrappedApiResponse(true, "Success!");
     }
 
-    public synchronized <X extends BaseApiRequest> BaseApiResponse DeleteAsync(X request)
+    public synchronized <X extends BaseApiRequest> WrappedApiResponse DeleteAsync(X request)
             throws MalformedURLException, IOException
     {
         var connection = HttpConnectionFactory.CreateSecure(
@@ -97,6 +124,6 @@ public final class HttpApiClient
 
         System.out.println("Response: " + responseCode + " - " + responseMessage);
 
-        return new GenericSuccessResponse(responseMessage);
+        return new WrappedApiResponse();
     }
 }

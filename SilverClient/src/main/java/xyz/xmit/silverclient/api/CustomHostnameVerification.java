@@ -14,9 +14,10 @@ public final class CustomHostnameVerification implements HostnameVerifier
 
     @Override
     public boolean verify(String hostname, SSLSession session) {
-        System.out.println("VERIFY HOST: " + hostname);
-
-        if (hostname.startsWith("192.168.") || hostname.startsWith("172.16.") || hostname.startsWith("10.") || hostname.equalsIgnoreCase("localhost")) {
+        if (hostname.startsWith("192.168.")
+                || hostname.startsWith("172.16.")
+                || hostname.startsWith("10.")
+                || hostname.equalsIgnoreCase("localhost")) {
             return true;
         }
 
