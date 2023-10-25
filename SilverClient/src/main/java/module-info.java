@@ -13,7 +13,9 @@ module xyz.xmit.silverclient {
     exports xyz.xmit.silverclient;
     exports xyz.xmit.silverclient.api;
     exports xyz.xmit.silverclient.models;
-    exports xyz.xmit.silverclient.controllers;
-    opens xyz.xmit.silverclient.controllers to javafx.fxml;
+    exports xyz.xmit.silverclient.ui.controllers;
+    opens xyz.xmit.silverclient.ui.controllers to javafx.fxml;
     opens xyz.xmit.silverclient.api to com.fasterxml.jackson.databind;
+    exports xyz.xmit.silverclient.utilities;
+    opens xyz.xmit.silverclient.utilities to javafx.fxml;
 }

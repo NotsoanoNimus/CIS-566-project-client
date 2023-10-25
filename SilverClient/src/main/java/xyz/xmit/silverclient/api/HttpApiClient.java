@@ -1,6 +1,5 @@
 package xyz.xmit.silverclient.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import xyz.xmit.silverclient.api.request.BaseApiRequest;
 import xyz.xmit.silverclient.api.request.GenericGetRequest;
 
@@ -36,7 +35,7 @@ public final class HttpApiClient
             };
 
             var sc = SSLContext.getInstance("SSL");
-            sc.init(null, new TrustManager[]{trm}, null);
+            sc.init(null, new TrustManager[] { trm }, null);
 
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 

@@ -1,34 +1,25 @@
 package xyz.xmit.silverclient;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import xyz.xmit.silverclient.api.ApiAuthenticationContext;
-import xyz.xmit.silverclient.api.HttpApiClient;
+import xyz.xmit.silverclient.utilities.FxmlSceneBuilder;
+import xyz.xmit.silverclient.utilities.SilverUtilities;
 
 import java.io.IOException;
 
 public class SilverLibraryApplication extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
-        var fxmlLoader = new FXMLLoader(SilverLibraryApplication.class.getResource("authentication-window.fxml"));
-
-        var scene = new Scene(fxmlLoader.load(), 600, 400);
-
-        scene.getStylesheets().add(SilverLibraryApplication.class.getResource("global.css").toExternalForm());
-
-        stage.setTitle("Silver Library Management | Log In");
-        stage.setResizable(false);
-        stage.setScene(scene);
-
-        stage.show();
+    public void start(Stage stage) {
+        // The application will ALWAYS enter on the authentication window at start-up.
+        new FxmlSceneBuilder("authentication-window.fxml", stage)
+                .setWidth(600)
+                .setHeight(400)
+                .setTitle("Silver Library Management | Log In")
+                .setResizeable(false)
+                .build();
     }
 
     public static void main(String[] args) {
-        launch();
+        Application.launch();
     }
 }

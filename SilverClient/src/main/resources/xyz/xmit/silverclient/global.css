@@ -1,5 +1,8 @@
 .root {
     -fx-background-color: #D0AF89;
+    -fx-border-color: #823;
+    -fx-border-style: solid;
+    -fx-border-width: 3px;
 }
 
 #lLoginStatus {
