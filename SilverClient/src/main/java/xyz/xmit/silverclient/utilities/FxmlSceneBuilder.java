@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import xyz.xmit.silverclient.SilverLibraryApplication;
 
 import java.io.IOException;
@@ -64,6 +65,10 @@ public final class FxmlSceneBuilder
             for (var resourceName : this.stylesheets) {
                 primaryWindowScene.getStylesheets()
                         .add(SilverLibraryApplication.class.getResource(resourceName).toExternalForm());
+            }
+
+            if (this.stage.getStyle() != StageStyle.UNDECORATED) {
+                this.stage.initStyle(StageStyle.UNDECORATED);
             }
 
             this.stage.setScene(primaryWindowScene);
