@@ -30,7 +30,7 @@ public final class HttpConnectionFactory
             ApiAuthenticationContext authenticationContext)
             throws MalformedURLException, IOException
     {
-        var serverAddress = new URL("https://192.168.0.121/client-api/"+fromRequest.getHostUrl());
+        var serverAddress = new URL("https://silver.xmit.xyz/client-api/"+fromRequest.getHostUrl());
 
         var urlConnection = (HttpsURLConnection)serverAddress.openConnection();
 
