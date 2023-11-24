@@ -60,6 +60,9 @@ public final class HttpApiClient
     private WrappedApiResponse readWrappedApiResponseOrDie(HttpsURLConnection connection)
             throws Exception
     {
+        System.out.println("Outgoing Connection: " + connection.getRequestMethod() + " " + connection.getURL());
+        System.out.println("-----");
+
         connection.connect();
 
         var responseCode = connection.getResponseCode();

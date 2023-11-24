@@ -69,8 +69,8 @@ public final class AuthenticationController
                 SilverUtilities.RunDelayedEvent(
                         2.5,
                         event -> new FxmlSceneBuilder("primary-window.fxml", stageReference)
-                                    .setWidth(800)
-                                    .setHeight(600)
+                                    .setWidth(1000)
+                                    .setHeight(750)
                                     .setTitle("Silver Library Management | Dashboard")
                                     .build());
 
