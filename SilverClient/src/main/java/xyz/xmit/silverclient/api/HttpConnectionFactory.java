@@ -1,5 +1,7 @@
 package xyz.xmit.silverclient.api;
 
+import xyz.xmit.silverclient.SilverLibraryApplication;
+
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -7,6 +9,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
 
+/**
+ * DESIGN PATTERN: Factory (Creational)
+ * This class makes use of the Factory design pattern to manufacture HTTP or HTTPS connection
+ * objects based on the parameters of the provided request object. This removes a lot of inline
+ * ceremony and reduces code repetition in places where new JSON API connection requests are
+ * needed.
+ */
 public final class HttpConnectionFactory
 {
     public static <T extends HttpRequestable> HttpURLConnection Create(
@@ -30,7 +39,11 @@ public final class HttpConnectionFactory
             ApiAuthenticationContext authenticationContext)
             throws MalformedURLException, IOException
     {
-        var serverAddress = new URL("https://localhost/client-api/"+fromRequest.getHostUrl());
+        var serverAddress = new URL(
+                "https://"
+                + SilverLibraryApplication.getTargetSilverServerHostname()
+                + "/client-api/"
+                + fromRequest.getHostUrl());
 
         var urlConnection = (HttpsURLConnection)serverAddress.openConnection();
 

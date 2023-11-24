@@ -7,7 +7,12 @@ import xyz.xmit.silverclient.utilities.SilverUtilities;
 
 import java.io.IOException;
 
-public class SilverLibraryApplication extends Application {
+public final class SilverLibraryApplication extends Application
+{
+    public static String getTargetSilverServerHostname() {
+        return "localhost";
+    }
+
     @Override
     public void start(Stage stage) {
         // The application will ALWAYS enter on the authentication window at start-up.
