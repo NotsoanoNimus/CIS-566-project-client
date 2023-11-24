@@ -15,6 +15,7 @@ public class SilverLibraryApplication extends Application {
                 .setWidth(600)
                 .setHeight(400)
                 .setTitle("Silver Library Management | Log In")
+                .setUndecorated(false)
                 .setResizeable(false)
                 .build();
     }

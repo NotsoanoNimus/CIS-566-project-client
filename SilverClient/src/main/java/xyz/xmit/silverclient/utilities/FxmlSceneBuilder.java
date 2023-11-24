@@ -45,6 +45,8 @@ public final class FxmlSceneBuilder
 
     private boolean closesStageOnBuildError = true;
 
+    private boolean undecorated = true;
+
     /**
      * @see FxmlSceneBuilder
      */
@@ -67,8 +69,12 @@ public final class FxmlSceneBuilder
                         .add(SilverLibraryApplication.class.getResource(resourceName).toExternalForm());
             }
 
-            if (this.stage.getStyle() != StageStyle.UNDECORATED) {
-                this.stage.initStyle(StageStyle.UNDECORATED);
+            if (!this.stage.isShowing()) {
+                if (this.undecorated && this.stage.getStyle() != StageStyle.UNDECORATED) {
+                    this.stage.initStyle(StageStyle.UNDECORATED);
+                } else if (!this.undecorated && this.stage.getStyle() != StageStyle.DECORATED) {
+                    this.stage.initStyle(StageStyle.DECORATED);
+                }
             }
 
             this.stage.setScene(primaryWindowScene);
@@ -129,6 +135,16 @@ public final class FxmlSceneBuilder
     public FxmlSceneBuilder setHeight(int height) {
         this.height = height;
         this.stage.setHeight(height);
+
+        return this;
+    }
+
+    public boolean isUndecorated() {
+        return undecorated;
+    }
+
+    public FxmlSceneBuilder setUndecorated(boolean isUndecorated) {
+        this.undecorated = isUndecorated;
 
         return this;
     }

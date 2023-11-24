@@ -3,8 +3,12 @@ package xyz.xmit.silverclient.ui.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.VBox;
 
 public final class PrimaryWindowController {
+    @FXML
+    public VBox mainMenuContainer;
+
     @FXML
     public void doLogout()
     {
@@ -14,6 +18,9 @@ public final class PrimaryWindowController {
                 ButtonType.YES,
                 ButtonType.CANCEL);
 
+        confirmationOfExit.setHeaderText("Log Out");
+        confirmationOfExit.setTitle("Log Out");
+        confirmationOfExit.setResizable(false);
         confirmationOfExit.showAndWait();
 
         if (confirmationOfExit.getResult() == ButtonType.YES) {

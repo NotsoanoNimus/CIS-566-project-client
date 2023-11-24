@@ -5,14 +5,12 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane fx:id="apAuth" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.xmit.silverclient.ui.controllers.AuthenticationController">
-   <children>
-      <ImageView fx:id="logoImage" fitHeight="191.0" fitWidth="213.0" layoutX="198.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
-         <Image url="@images/silver_logo.png">
-         </Image>
-      </ImageView>
-      <TextField fx:id="tfUsername" layoutX="180.0" layoutY="260.0" onKeyPressed="#submitLoginOnEnter" prefHeight="25.0" prefWidth="240.0" promptText="Email Address" />
-      <PasswordField fx:id="tfPassword" layoutX="180.0" layoutY="292.0" onKeyPressed="#submitLoginOnEnter" prefHeight="25.0" prefWidth="240.0" promptText="Password" />
-      <Button fx:id="bLogin" alignment="CENTER" prefWidth="60.0" contentDisplay="CENTER" layoutX="270.0" layoutY="330.0" mnemonicParsing="false" onMouseClicked="#tryLogin" text="Log In" />
-      <Label fx:id="lLoginStatus" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="230.0" prefHeight="17.0" prefWidth="572.0" text="The Library Management Solution" textAlignment="CENTER" />
-   </children>
+   <ImageView fx:id="logoImage" fitHeight="191.0" fitWidth="213.0" layoutX="198.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@images/silver_logo.png">
+      </Image>
+   </ImageView>
+   <TextField fx:id="tfUsername" layoutX="180.0" layoutY="250.0" onKeyPressed="#submitLoginOnEnter" prefHeight="25.0" prefWidth="240.0" promptText="Email Address" />
+   <PasswordField fx:id="tfPassword" layoutX="180.0" layoutY="282.0" onKeyPressed="#submitLoginOnEnter" prefHeight="25.0" prefWidth="240.0" promptText="Password" />
+   <Button fx:id="bLogin" alignment="CENTER" prefWidth="60.0" contentDisplay="CENTER" layoutX="270.0" layoutY="320.0" mnemonicParsing="false" onMouseClicked="#tryLogin" text="Log In" />
+   <Label fx:id="lLoginStatus" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="220.0" prefHeight="17.0" prefWidth="572.0" text="The Library Management Solution" textAlignment="CENTER" />
 </AnchorPane>

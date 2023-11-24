@@ -7,25 +7,25 @@
 
 <AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.xmit.silverclient.ui.controllers.PrimaryWindowController">
    <children>
-      <TextField layoutX="154.0" layoutY="24.0" prefHeight="26.0" prefWidth="296.0" promptText="Search Books via Title, Bar Code or Author" />
-      <Button layoutX="450.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#doLogout" text="Search" />
-      <ScrollPane layoutX="154.0" layoutY="60.0" prefHeight="682.0" prefWidth="839.0">
-         <TableView prefHeight="679.0" prefWidth="835.0">
+      <TextField layoutX="154.0" layoutY="24.0" prefHeight="26.0" prefWidth="296.0" promptText="Search Items by title or SKU..." />
+      <Button layoutX="450.0" layoutY="24.0" mnemonicParsing="false" text="Search" />
+      <ScrollPane layoutX="154.0" layoutY="60.0" prefHeight="640.0" prefWidth="820.0">
+         <TableView prefHeight="640.0" prefWidth="835.0">
             <columns>
-               <TableColumn prefWidth="184.0" text="Acquired At" />
-               <TableColumn prefWidth="221.0" text="Book Title" />
+               <TableColumn prefWidth="221.0" text="Item Title" />
                <TableColumn prefWidth="100.0" text="Edition" />
-               <TableColumn prefWidth="100.0" text="SKU#" />
+               <TableColumn prefWidth="120.0" text="SKU#" />
                <TableColumn prefWidth="100.0" text="Status" />
-               <TableColumn prefWidth="137.0" text="Condition" />
+               <TableColumn prefWidth="100.0" text="Condition" />
+               <TableColumn prefWidth="182.0" text="Acquired At" />
             </columns>
          </TableView>
       </ScrollPane>
-      <VBox layoutY="8.0" prefHeight="596.0" prefWidth="135.0" style="-fx-background-color: #d0af89;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="mainMenuContainer" layoutY="8.0" prefHeight="596.0" prefWidth="135.0" style="-fx-background-color: #fac489;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <ImageView fitHeight="148.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true">
              <Image url="@images/silver_logo.png" />
          </ImageView>
-         <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="135.0" style="-fx-background-color: #d0af89;" text="Home">
+         <Button styleClass="menu-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" text="Home">
             <graphic>
                <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                   <image>
@@ -37,7 +37,7 @@
                <Insets left="10.0" />
             </padding>
          </Button>
-         <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" style="-fx-background-color: #d0af89;" text="Manage Users">
+         <Button styleClass="menu-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" text="Manage Users">
             <graphic>
                <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                   <image>
@@ -49,7 +49,7 @@
                <Insets left="10.0" />
             </padding>
          </Button>
-         <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" style="-fx-background-color: #d0af89;" text="Manage Items">
+         <Button styleClass="menu-button" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" text="Manage Items">
             <graphic>
                <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                   <image>
@@ -61,7 +61,7 @@
                <Insets left="10.0" />
             </padding>
          </Button>
-         <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" style="-fx-background-color: #d0af89;" text="Logout">
+         <Button styleClass="menu-button" onMouseClicked="#doLogout" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" text="Logout">
             <graphic>
                <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                   <image>

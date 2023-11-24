@@ -72,6 +72,8 @@ public final class AuthenticationController
                                     .setWidth(1000)
                                     .setHeight(750)
                                     .setTitle("Silver Library Management | Dashboard")
+                                    .setResizeable(false)
+                                    .setUndecorated(false)
                                     .build());
 
                 return;
