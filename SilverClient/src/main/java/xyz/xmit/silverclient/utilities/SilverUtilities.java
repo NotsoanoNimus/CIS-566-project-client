@@ -4,6 +4,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.util.Duration;
 
 public final class SilverUtilities
@@ -23,5 +25,25 @@ public final class SilverUtilities
                 ));
 
         timer.play();
+    }
+
+    public static boolean ShowLogoutDialog()
+    {
+        var confirmationOfExit = new Alert(
+                Alert.AlertType.CONFIRMATION,
+                "Are you sure you want to exit? Unsaved changes will not be committed.",
+                ButtonType.YES,
+                ButtonType.CANCEL);
+
+        confirmationOfExit.setHeaderText("Log Out");
+        confirmationOfExit.setTitle("Log Out");
+        confirmationOfExit.setResizable(false);
+        confirmationOfExit.showAndWait();
+
+        if (confirmationOfExit.getResult() == ButtonType.YES) {
+            System.exit(0);
+        }
+
+        return false;
     }
 }

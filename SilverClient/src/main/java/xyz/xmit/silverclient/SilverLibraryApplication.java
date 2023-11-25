@@ -22,6 +22,7 @@ public final class SilverLibraryApplication extends Application
                 .setTitle("Silver Library Management | Log In")
                 .setUndecorated(false)
                 .setResizeable(false)
+                .setExitMonitoring(false)
                 .build();
     }
 

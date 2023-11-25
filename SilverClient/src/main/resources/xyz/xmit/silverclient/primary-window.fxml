@@ -11,7 +11,7 @@
       <ImageView fitHeight="148.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true">
           <Image url="@images/silver_logo.png" />
       </ImageView>
-      <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Home">
+      <Button fx:id="homeButton" alignment="BASELINE_LEFT" onMouseClicked="#doHome" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Home">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -26,7 +26,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Manage Users">
+      <Button fx:id="manageUsersButton" alignment="BASELINE_LEFT" onMouseClicked="#doManageUsers" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Manage Users">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -41,7 +41,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Manage Items">
+      <Button fx:id="manageItemsButton" alignment="BASELINE_LEFT" onMouseClicked="#doManageItems" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Manage Items">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                <image>

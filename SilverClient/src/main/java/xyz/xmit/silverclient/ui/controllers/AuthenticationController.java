@@ -74,7 +74,7 @@ public final class AuthenticationController
                                     .setTitle("Silver Library Management | Dashboard")
                                     .setResizeable(false)
                                     .setUndecorated(false)
-                                    .build());
+                                    .buildWithBaseControllerAction(PrimaryWindowController.class));
 
                 return;
             }

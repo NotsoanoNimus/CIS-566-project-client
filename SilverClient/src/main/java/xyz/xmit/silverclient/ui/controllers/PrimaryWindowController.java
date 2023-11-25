@@ -1,12 +1,29 @@
 package xyz.xmit.silverclient.ui.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import xyz.xmit.silverclient.ui.statemachine.HomeSilverState;
+import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
+import xyz.xmit.silverclient.ui.statemachine.SilverStateException;
+import xyz.xmit.silverclient.utilities.SilverUtilities;
 
-public final class PrimaryWindowController {
+public final class PrimaryWindowController
+    extends HookedController
+{
+    private SilverApplicationContext context;
+
+    @FXML
+    public Button homeButton;
+
+    @FXML
+    public Button manageUsersButton;
+
+    @FXML
+    public Button manageItemsButton;
+
     @FXML
     public VBox mainMenuContainer;
 
@@ -19,37 +36,45 @@ public final class PrimaryWindowController {
     @FXML
     public Pane manageItemsPane;
 
-    @FXML
-    public void doHome()
+    @Override
+    public void controllerEntryHook()
     {
+        this.context = new SilverApplicationContext(this);
+
+        this.context.getCurrentState().onHome();
     }
 
-    @FXML
+    public void doHome(MouseEvent mouseEvent)
+    {
+        this.context.getCurrentState().onHome();
+
+        if (this.context.getCurrentState() instanceof HomeSilverState) {
+            this.homeButton.getStyleClass().add("active");
+            this.manageItemsButton.getStyleClass().remove("menu-active");
+        }
+    }
+
     public void doManageUsers()
     {
+        this.context.getCurrentState().onManageUsers();
     }
 
-    @FXML
     public void doManageItems()
     {
+        this.context.getCurrentState().onManageItems();
     }
 
     @FXML
     public void doLogout()
     {
-        var confirmationOfExit = new Alert(
-                Alert.AlertType.CONFIRMATION,
-                "Are you sure you want to exit? Unsaved changes will not be committed.",
-                ButtonType.YES,
-                ButtonType.CANCEL);
+        try {
+            this.context.getCurrentState().onLogout();
 
-        confirmationOfExit.setHeaderText("Log Out");
-        confirmationOfExit.setTitle("Log Out");
-        confirmationOfExit.setResizable(false);
-        confirmationOfExit.showAndWait();
-
-        if (confirmationOfExit.getResult() == ButtonType.YES) {
-            System.exit(0);
+            SilverUtilities.ShowLogoutDialog();
+        } catch (SilverStateException stateDenied) {
+            // consume the exception; it's only here to deny logouts
+        } catch (Exception ex) {
+            // consume the exception, but should probably actually do something here...
         }
     }
 }
