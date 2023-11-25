@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 public @interface DataField
 {
     public boolean hidden() default false;
+
+    public int lengthLimit() default 2^16;
 }
