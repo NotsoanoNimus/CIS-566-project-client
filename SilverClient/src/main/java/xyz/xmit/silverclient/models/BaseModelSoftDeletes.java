@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
-public abstract class BaseModelWithPrimary<TPrimary>
+public abstract class BaseModelSoftDeletes<TPrimary>
     implements Model
 {
     @JsonProperty
@@ -22,6 +22,11 @@ public abstract class BaseModelWithPrimary<TPrimary>
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     @DataField
     public Date updated_at = null;
+
+    @JsonProperty
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+    @DataField(hidden = true)
+    public Date deleted_at = null;
 
     @JsonIgnore
     public abstract String getBaseModelUri();

@@ -3,7 +3,7 @@ package xyz.xmit.silverclient.api;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import xyz.xmit.silverclient.models.BaseModelWithPrimary;
+import xyz.xmit.silverclient.models.BaseModel;
 
 import java.io.IOException;
 
@@ -69,7 +69,7 @@ public final class WrappedApiResponse
         this.data = data;
     }
 
-    public <T extends BaseModelWithPrimary<?>> T unwrapData() {
+    public <T extends BaseModel<?>> T unwrapData() {
         // Deserialize 'data' JSON
         return null;
     }
