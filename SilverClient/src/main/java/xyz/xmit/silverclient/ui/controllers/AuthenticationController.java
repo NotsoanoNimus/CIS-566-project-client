@@ -58,8 +58,11 @@ public final class AuthenticationController
                     this.tfUsername.getText().trim().toLowerCase(), this.tfPassword.getText());
 
             // Set the response content and color based on the API response.
+            var responseData = apiResponse.getData();
+            if (responseData == null) responseData = apiResponse.getEncapsulatedMessageApiResponse().getMessage();
+
             this.lLoginStatus.setTextFill(apiResponse.getSuccess() ? Color.GREEN : Color.DARKRED);
-            this.lLoginStatus.setText(apiResponse.getData());
+            this.lLoginStatus.setText(responseData);
 
             // Get the current Stage reference.
             var stageReference = (Stage)this.apAuth.getScene().getWindow();

@@ -35,7 +35,7 @@ public final class InventoryItemEdition
     public String publisher;
 
     @DataField
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     public Date published_at;
 
     @Override

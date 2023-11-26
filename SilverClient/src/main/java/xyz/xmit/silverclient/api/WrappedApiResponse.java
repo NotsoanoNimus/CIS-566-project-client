@@ -1,17 +1,19 @@
 package xyz.xmit.silverclient.api;
 
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import xyz.xmit.silverclient.models.BaseModelTimestamps;
 
 import java.io.IOException;
 
-public final class WrappedApiResponse
+public final class WrappedApiResponse<TData>
 {
-    private static class EncapsulatedMessageApiResponse
+    public static class EncapsulatedMessageApiResponse
     {
         private String message;
+
+        public EncapsulatedMessageApiResponse(String message)
+        {
+            this.message = message;
+        }
 
         public String getMessage() {
             return this.message;
@@ -24,25 +26,30 @@ public final class WrappedApiResponse
 
     private boolean success = false;
 
-    private String data = null;
+    private TData data = null;
+
+    private Class<TData> dataType;
+
+    private EncapsulatedMessageApiResponse encapsulatedMessageApiResponse = null;
 
     public WrappedApiResponse() {}
 
-    public WrappedApiResponse(String jsonResponseBody)
-            throws DatabindException, StreamReadException, IOException
+    public WrappedApiResponse(String jsonResponseBody, Class<TData> clazz) throws IOException
     {
         var mapper = new ObjectMapper();
+        var targetType = mapper.getTypeFactory().constructParametricType(WrappedApiResponse.class, clazz);
+        var thisObject = mapper.<WrappedApiResponse<TData>>readValue(jsonResponseBody.getBytes(), targetType);
 
-        var thisObject = mapper.readValue(jsonResponseBody.getBytes(), WrappedApiResponse.class);
         this.success = thisObject.success;
         this.data = thisObject.data;
     }
 
-    public WrappedApiResponse(String jsonResponseBody, boolean altIsSuccessful, String altText)
+    public WrappedApiResponse(String jsonResponseBody, Class<TData> clazz, boolean altIsSuccessful, String altText)
     {
         try {
             var mapper = new ObjectMapper();
-            var thisObject = mapper.readValue(jsonResponseBody.getBytes(), WrappedApiResponse.class);
+            var targetType = mapper.getTypeFactory().constructParametricType(WrappedApiResponse.class, clazz);
+            var thisObject = mapper.<WrappedApiResponse<TData>>readValue(jsonResponseBody.getBytes(), targetType);
 
             this.success = thisObject.success;
             this.data = thisObject.data;
@@ -53,25 +60,20 @@ public final class WrappedApiResponse
                 var thisObject = mapper.readValue(jsonResponseBody.getBytes(), EncapsulatedMessageApiResponse.class);
 
                 this.success = false;
-                this.data = thisObject.getMessage();
+                this.encapsulatedMessageApiResponse = thisObject;
             } catch (Exception innerException) {
                 System.out.println("Problem parsing generic, wrapped API response. Using alternate values.");
                 innerException.printStackTrace();
 
                 this.success = altIsSuccessful;
-                this.data = altText;
+                this.encapsulatedMessageApiResponse = new EncapsulatedMessageApiResponse(altText);
             }
         }
     }
 
-    public WrappedApiResponse(boolean isSuccess, String data) {
+    public WrappedApiResponse(boolean isSuccess, TData data) {
         this.success = isSuccess;
         this.data = data;
-    }
-
-    public <T extends BaseModelTimestamps<?>> T unwrapData() {
-        // Deserialize 'data' JSON
-        return null;
     }
 
     public boolean getSuccess() {
@@ -82,11 +84,15 @@ public final class WrappedApiResponse
         this.success = success;
     }
 
-    public String getData() {
+    public TData getData() {
         return this.data;
     }
 
-    public void setData(String data) {
+    public void setData(TData data) {
         this.data = data;
+    }
+
+    public EncapsulatedMessageApiResponse getEncapsulatedMessageApiResponse() {
+        return this.encapsulatedMessageApiResponse;
     }
 }

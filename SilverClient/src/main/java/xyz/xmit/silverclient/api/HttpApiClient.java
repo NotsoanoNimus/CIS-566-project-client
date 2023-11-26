@@ -57,7 +57,7 @@ public final class HttpApiClient
         this.authenticationContext = authenticationContext;
     }
 
-    private WrappedApiResponse readWrappedApiResponseOrDie(HttpsURLConnection connection)
+    private <T> WrappedApiResponse<T> readWrappedApiResponseOrDie(HttpsURLConnection connection, Class<T> dummyModelClass)
             throws Exception
     {
         System.out.println("Outgoing Connection: " + connection.getRequestMethod() + " " + connection.getURL());
@@ -78,21 +78,21 @@ public final class HttpApiClient
         // Need to be able to fall back to an acceptable Wrapper API response in the event
         //   that a server error does not come back in the deserializable JSON format we expect.
         return responseCode < HttpURLConnection.HTTP_BAD_REQUEST
-            ? new WrappedApiResponse(response)
-            : new WrappedApiResponse(response, false, responseMessage);
+            ? new WrappedApiResponse<T>(response, dummyModelClass)
+            : new WrappedApiResponse<T>(response, dummyModelClass, false, responseMessage);
     }
 
-    public synchronized WrappedApiResponse tryLogin(String username, String password)
+    public synchronized WrappedApiResponse<String> tryLogin(String username, String password)
     {
         String apiKey;
-        WrappedApiResponse responseObject;
+        WrappedApiResponse<String> responseObject;
 
         try {
             var connection = HttpConnectionFactory.CreateSecure(
                     new GenericGetRequest().setMethod("GET").setHostUrl("delegate"),
                     new ApiAuthenticationContext(username, password));
 
-            responseObject = this.readWrappedApiResponseOrDie(connection);
+            responseObject = this.readWrappedApiResponseOrDie(connection, String.class);
 
             if (!responseObject.getSuccess()) {
                 return responseObject;
@@ -101,7 +101,7 @@ public final class HttpApiClient
             System.out.println("Failed to establish authentication request.");
             ex.printStackTrace();
 
-            return new WrappedApiResponse(false, "An error occurred while trying to authenticate.");
+            return new WrappedApiResponse<String>(false, "An error occurred while trying to authenticate.");
         }
 
         apiKey = responseObject.getData();
@@ -110,6 +110,15 @@ public final class HttpApiClient
 
         System.out.println("Logged in as: " + username);
         return new WrappedApiResponse(true, "Success!");
+    }
+
+    public <X extends BaseApiRequest, Y> WrappedApiResponse<Y> GetAsync(X request, Class<Y> blankModelClass) throws Exception
+    {
+        var connection = HttpConnectionFactory.CreateSecure(request, this.authenticationContext);
+
+        connection.connect();
+
+        return this.<Y>readWrappedApiResponseOrDie(connection, blankModelClass);
     }
 
     public synchronized <X extends BaseApiRequest> WrappedApiResponse DeleteAsync(X request)

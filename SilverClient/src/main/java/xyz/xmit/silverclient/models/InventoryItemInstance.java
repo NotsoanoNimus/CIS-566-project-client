@@ -20,7 +20,7 @@ public final class InventoryItemInstance
     public String item_description;
 
     @DataField
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     public Date acquired_at;
 
     @DataField(lengthLimit = 255)

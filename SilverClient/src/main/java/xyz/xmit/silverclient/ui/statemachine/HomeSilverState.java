@@ -1,6 +1,10 @@
 package xyz.xmit.silverclient.ui.statemachine;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.Node;
+import xyz.xmit.silverclient.api.HttpApiClient;
+import xyz.xmit.silverclient.api.request.GenericGetRequest;
+import xyz.xmit.silverclient.models.Tag;
 
 public final class HomeSilverState
     extends BaseContainerSilverState
@@ -18,6 +22,12 @@ public final class HomeSilverState
         if (this.hasLoadedServerData) return;
 
         // load data
+        try {
+            var resp = HttpApiClient.getInstance().GetAsync(new GenericGetRequest().setMethod("GET").setHostUrl("tag/1"), Tag.class);
+            System.out.println(new ObjectMapper().writeValueAsString(resp));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         this.hasLoadedServerData = true;
     }
