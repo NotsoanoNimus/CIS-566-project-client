@@ -14,10 +14,11 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Label?>
 <AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.xmit.silverclient.ui.controllers.PrimaryWindowController">
    <VBox fx:id="mainMenuContainer" layoutY="8.0" prefHeight="596.0" prefWidth="135.0" style="-fx-background-color: #fac489;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
       <ImageView fitHeight="148.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true">
-          <Image url="@images/silver_logo.png" />
+         <Image url="@images/silver_logo.png" />
       </ImageView>
       <Button fx:id="homeButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doHome" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Home">
          <graphic>
@@ -80,22 +81,6 @@
          </cursor>
       </Button>
    </VBox>
-   <Pane fx:id="homePane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
-      <TextField fx:id="tfSearchHome" layoutX="20.0" layoutY="24.0" prefHeight="26.0" prefWidth="296.0" promptText="Search Items by title or SKU..." visible="false" />
-      <Button fx:id="bSearchHome" layoutX="316.0" layoutY="24.0" mnemonicParsing="false" text="Search" visible="false" />
-      <ScrollPane layoutX="20.0" layoutY="60.0" prefHeight="640.0" prefWidth="820.0">
-         <TableView fx:id="tableHome" prefHeight="640.0" prefWidth="835.0">
-            <columns>
-               <TableColumn prefWidth="221.0" text="Item Title" />
-               <TableColumn prefWidth="100.0" text="Edition" />
-               <TableColumn prefWidth="120.0" text="SKU#" />
-               <TableColumn prefWidth="100.0" text="Status" />
-               <TableColumn prefWidth="100.0" text="Condition" />
-               <TableColumn prefWidth="182.0" text="Acquired At" />
-            </columns>
-         </TableView>
-      </ScrollPane>
-   </Pane>
    <Pane fx:id="manageUsersPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
       <children>
          <Button layoutX="759.0" layoutY="14.0" mnemonicParsing="false" text="Add New User" />
@@ -116,31 +101,32 @@
                </TableView>
             </content>
          </ScrollPane>
-      </children></Pane>
+      </children>
+   </Pane>
    <Pane fx:id="manageItemsPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0">
       <children>
          <SplitPane dividerPositions="0.4605451936872309" layoutX="14.0" layoutY="127.0" prefHeight="551.0" prefWidth="838.0">
-           <items>
-             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+            <items>
+               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                   <children>
                      <ScrollPane prefHeight="550.0" prefWidth="382.0">
-                       <content>
-                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="553.0" prefWidth="381.0">
+                        <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="553.0" prefWidth="381.0">
                               <children>
                                  <TableView prefHeight="536.0" prefWidth="369.0">
-                                   <columns>
-                                     <TableColumn prefWidth="204.80005794763565" text="Title" />
-                                     <TableColumn prefWidth="145.59994506835938" text="Author" />
-                                   </columns>
+                                    <columns>
+                                       <TableColumn prefWidth="204.80005794763565" text="Title" />
+                                       <TableColumn prefWidth="145.59994506835938" text="Author" />
+                                    </columns>
                                  </TableView>
                               </children>
                            </AnchorPane>
-                       </content>
+                        </content>
                      </ScrollPane>
                   </children>
                </AnchorPane>
-             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
-           </items>
+               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+            </items>
          </SplitPane>
          <TextField fx:id="tfSearchHome11" layoutX="107.0" layoutY="25.0" prefHeight="26.0" prefWidth="296.0" promptText="Search Titles or Author" />
          <Button fx:id="bSearchHome11" layoutX="433.0" layoutY="26.0" mnemonicParsing="false" text="Search" />
@@ -148,5 +134,29 @@
          <Button layoutX="442.0" layoutY="71.0" mnemonicParsing="false" text="Remove Title" />
          <Button layoutX="484.0" layoutY="698.0" mnemonicParsing="false" text="Edition" />
          <Button layoutX="573.0" layoutY="697.0" mnemonicParsing="false" text="Instances" />
-      </children></Pane>
+      </children>
+   </Pane>
+   <Pane fx:id="homePane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0">
+      <cursor>
+         <Cursor fx:constant="WAIT" />
+      </cursor>
+      <TextField fx:id="tfSearchHome" onKeyTyped="#onKeyFilterDashboard" layoutX="20.0" layoutY="24.0" prefHeight="26.0" prefWidth="296.0" promptText="Search Items by title or SKU..." />
+      <Button fx:id="bRefreshHome" onMouseClicked="#doRefresh" layoutX="316.0" layoutY="24.0" mnemonicParsing="false" text="Refresh" />
+      <TableView fx:id="tableHome" layoutX="20.0" layoutY="60.0" prefHeight="640.0" prefWidth="820.0">
+         <placeholder>
+            <Label fx:id="tableHomeLabel" text="Loading..." />
+         </placeholder>
+         <columns>
+            <TableColumn prefWidth="210.0" text="Item Title" />
+            <TableColumn prefWidth="100.0" text="Edition" />
+            <TableColumn prefWidth="100.0" text="SKU#" />
+            <TableColumn prefWidth="100.0" text="Status" />
+            <TableColumn prefWidth="100.0" text="Condition" />
+            <TableColumn prefWidth="180.0" text="Acquired At" />
+         </columns>
+         <cursor>
+            <Cursor fx:constant="WAIT" />
+         </cursor>
+      </TableView>
+   </Pane>
 </AnchorPane>

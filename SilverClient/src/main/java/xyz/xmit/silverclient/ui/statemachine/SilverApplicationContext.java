@@ -32,8 +32,11 @@ public final class SilverApplicationContext
         this.stateMap.put(
                 ManageItemsSilverState.class,
                 new ManageItemsSilverState(this, primaryWindowController.manageItemsPane, primaryWindowController.manageItemsButton));
+        this.stateMap.put(
+                PopupSilverState.class,
+                new PopupSilverState(this));
 
-        this.currentState = this.stateMap.get(HomeSilverState.class);
+        this.setCurrentState(HomeSilverState.class);
     }
 
     public <T extends Class<? extends SilverState>> void setCurrentState(T newStateType)
@@ -42,7 +45,10 @@ public final class SilverApplicationContext
 
         // Only set the active panel if the chosen state has a parent node/container attached to it.
         if (BaseContainerSilverState.class.isAssignableFrom(this.currentState.getClass())) {
-            for (var itemType : this.stateMap.keySet()) {
+            var assignableTypes = this.stateMap.keySet().stream().filter(
+                    type -> BaseContainerSilverState.class.isAssignableFrom((Class<?>)type)).toList();
+
+            for (var itemType : assignableTypes) {
                 var asBaseContainerState = ((BaseContainerSilverState)this.stateMap.get(itemType));
 
                 asBaseContainerState.getAssociatedContainerNode().setVisible(newStateType == itemType);
@@ -77,6 +83,11 @@ public final class SilverApplicationContext
     {
         this.dashboardData = data;
 
-        this.getController().refreshDashboardData();
+        this.getController().refreshDashboardData(this.dashboardData);
+    }
+
+    public void setDashboardDataFiltered(HomeScreenData data)
+    {
+        this.getController().refreshDashboardData(data);
     }
 }

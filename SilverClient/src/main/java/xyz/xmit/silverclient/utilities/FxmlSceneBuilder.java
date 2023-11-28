@@ -9,6 +9,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import xyz.xmit.silverclient.SilverLibraryApplication;
 import xyz.xmit.silverclient.ui.controllers.HookedController;
+import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
 
 import java.io.IOException;
 
@@ -27,6 +28,7 @@ import java.io.IOException;
  * in varying situations, as well as fluent (human-readable) constructions of new UI components.
  */
 public final class FxmlSceneBuilder
+    implements IFxmlSceneBuilder
 {
     private String fxmlResourceName;
 
@@ -59,18 +61,29 @@ public final class FxmlSceneBuilder
         this.stage = targetStage;
     }
 
-    public <T extends Class<? extends HookedController>> boolean buildWithBaseControllerAction(T controllerType)
+    public <T extends Class<? extends HookedController>> HookedController buildWithBaseControllerAction(T controllerType)
     {
-        var result = this.build();
+        return this.buildWithBaseControllerAction(controllerType, null);
+    }
+
+    public <T extends Class<? extends HookedController>> HookedController buildWithBaseControllerAction(
+            T controllerType,
+            SilverApplicationContext injectedContext)
+    {
+        this.build();
 
         var loader = (FXMLLoader)this.stage.getScene().getUserData();
 
         HookedController controller = loader.getController();
-        SilverUtilities.RunDelayedEvent(1.5, event -> controller.controllerEntryHook());
+        controller.controllerEntryHook();
+
+        if (injectedContext != null) {
+            controller.setApplicationContext(injectedContext);
+        }
 
         this.stage.getScene().setUserData(null);
 
-        return result;
+        return controller;
     }
 
     public boolean build() {
@@ -113,15 +126,7 @@ public final class FxmlSceneBuilder
             ioException.printStackTrace();
 
             // Show an error alert about failing to load the scene onto the stage.
-            var alert = new Alert(
-                    Alert.AlertType.ERROR,
-                    "Failed to load the next panel onto the stage.",
-                    ButtonType.OK);
-
-            // More details, synchronously show the pop-up.
-            alert.setHeaderText("Something went wrong!");
-            alert.setTitle("Application Error");
-            alert.showAndWait();
+            SilverUtilities.ShowAlert("Failed to load the next panel onto the stage.", "Failed to load scene!");
 
             // Close and exit the given stage reference if set to.
             if (this.closesStageOnBuildError) {
@@ -147,7 +152,7 @@ public final class FxmlSceneBuilder
         return title;
     }
 
-    public FxmlSceneBuilder setTitle(String title) {
+    public IFxmlSceneBuilder setTitle(String title) {
         this.title = title;
         this.stage.setTitle(title);
 
@@ -158,7 +163,7 @@ public final class FxmlSceneBuilder
         return width;
     }
 
-    public FxmlSceneBuilder setWidth(int width) {
+    public IFxmlSceneBuilder setWidth(int width) {
         this.width = width;
         this.stage.setWidth(width);
 
@@ -169,7 +174,7 @@ public final class FxmlSceneBuilder
         return height;
     }
 
-    public FxmlSceneBuilder setHeight(int height) {
+    public IFxmlSceneBuilder setHeight(int height) {
         this.height = height;
         this.stage.setHeight(height);
 
@@ -180,7 +185,7 @@ public final class FxmlSceneBuilder
         return undecorated;
     }
 
-    public FxmlSceneBuilder setUndecorated(boolean isUndecorated) {
+    public IFxmlSceneBuilder setUndecorated(boolean isUndecorated) {
         this.undecorated = isUndecorated;
 
         return this;
@@ -190,7 +195,7 @@ public final class FxmlSceneBuilder
         return exitMonitoring;
     }
 
-    public FxmlSceneBuilder setExitMonitoring(boolean isExitMonitoring) {
+    public IFxmlSceneBuilder setExitMonitoring(boolean isExitMonitoring) {
         this.exitMonitoring = isExitMonitoring;
 
         return this;
@@ -200,7 +205,7 @@ public final class FxmlSceneBuilder
         return isResizeable;
     }
 
-    public FxmlSceneBuilder setResizeable(boolean resizeable) {
+    public IFxmlSceneBuilder setResizeable(boolean resizeable) {
         this.isResizeable = resizeable;
         this.stage.setResizable(resizeable);
 
@@ -211,7 +216,7 @@ public final class FxmlSceneBuilder
         return stylesheets;
     }
 
-    public FxmlSceneBuilder setStylesheets(String[] stylesheets) {
+    public IFxmlSceneBuilder setStylesheets(String[] stylesheets) {
         this.stylesheets = stylesheets;
 
         return this;
@@ -225,7 +230,7 @@ public final class FxmlSceneBuilder
         return closesStageOnBuildError;
     }
 
-    public FxmlSceneBuilder setClosesStageOnBuildError(boolean closesStageOnBuildError) {
+    public IFxmlSceneBuilder setClosesStageOnBuildError(boolean closesStageOnBuildError) {
         this.closesStageOnBuildError = closesStageOnBuildError;
 
         return this;

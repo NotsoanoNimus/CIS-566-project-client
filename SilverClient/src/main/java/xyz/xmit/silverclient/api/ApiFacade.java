@@ -43,7 +43,10 @@ public final class ApiFacade
         try {
             var resp = HttpApiClient.getInstance().GetAsync(
                     new GenericGetRequest<>().setHostUrl("dashboard"), HomeScreenData.class);
-            System.out.println(new ObjectMapper().writeValueAsString(resp));
+
+            if (resp == null || resp.getData() == null) {
+                throw new Exception("null API response for dashboard");
+            }
 
             return resp;
         } catch (Exception ex) {

@@ -1,15 +1,13 @@
 package xyz.xmit.silverclient.ui.statemachine;
 
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import xyz.xmit.silverclient.api.ApiFacade;
 import xyz.xmit.silverclient.models.HomeScreenData;
-import xyz.xmit.silverclient.utilities.SilverUtilities;
 
 public final class HomeSilverState
     extends BaseContainerSilverState
 {
-    private HomeScreenData dashboardData = null;
-
     public HomeSilverState(SilverApplicationContext parentContext, Node containerNode, Node sourceEventNode)
     {
         super(parentContext, containerNode, sourceEventNode);
@@ -18,29 +16,32 @@ public final class HomeSilverState
     @Override
     protected void onLoadContainer()
     {
-        if (this.dashboardData != null) return;
+        if (this.getParentContext().getDashboardData() != null) return;
 
-        // load data
+        this.getParentContext().getController().tableHomeLabel.setText("Loading...");
+
         var apiResponse = ApiFacade.loadDashboard();
-        if (apiResponse == null || apiResponse.getData() == null) {
-            SilverUtilities.ShowAlert("Failed to properly parse or download dashboard data from the server.", "Dashboard Error", true);
-        }
 
         assert apiResponse != null;
+        var responseData = apiResponse.getData();
 
-        this.dashboardData = apiResponse.getData();
+        this.getAssociatedContainerNode().setCursor(Cursor.DEFAULT);
+        this.getParentContext().getController().tableHomeLabel.setText("No results");
+
+        this.getParentContext().setDashboardData(responseData);
     }
 
     @Override
-    public void onAuthenticate() {}
+    public void onRefreshData()
+    {
+        this.onLoadContainer();
 
-    @Override
-    public void onPopup() {}
+        this.getParentContext().getController().tfSearchHome.setText(null);
+    }
 
     @Override
     public void onHome()
     {
-        this.getParentContext().setDashboardData(this.dashboardData);
     }
 
     @Override
@@ -56,6 +57,11 @@ public final class HomeSilverState
 
     @Override
     public void onLogout()
+    {
+    }
+
+    @Override
+    public void onRevertState()
     {
     }
 }

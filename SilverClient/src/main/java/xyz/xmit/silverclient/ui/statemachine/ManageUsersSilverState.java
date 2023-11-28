@@ -11,17 +11,13 @@ public final class ManageUsersSilverState
     }
 
     @Override
-    protected void onLoadContainer() {
+    protected void onLoadContainer()
+    {
     }
 
     @Override
-    public void onAuthenticate() {
-
-    }
-
-    @Override
-    public void onPopup() {
-
+    public void onRefreshData()
+    {
     }
 
     @Override
@@ -42,7 +38,12 @@ public final class ManageUsersSilverState
     }
 
     @Override
-    public void onLogout() throws SilverStateException
+    public void onLogout()
+    {
+    }
+
+    @Override
+    public void onRevertState()
     {
     }
 }

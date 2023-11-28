@@ -34,4 +34,4 @@ In order to change the API target to your local machine (`localhost`) when runni
 
 - If running the JAR file with `java.exe -jar NAME.jar`, set the `SILVER_TARGET_HOSTNAME` environment variable before calling the JAR.
 - If running from within IntelliJ, click the dropdown for the `Run Output JAR` configuration and click Edit Configurations. In the "Run/Debug Configurations" window that pops up, you can modify the `Environment variables` which the program starts with. In here, add the `SILVER_TARGET_HOSTNAME` value.
-- Manually go to the [appropriate entrypoint class](https://github.com/NotsoanoNimus/CIS-566-project-client/blob/master/SilverClient/src/main/java/xyz/xmit/silverclient/SilverLibraryApplication.java#L11) and swap the returned string value in the `getTargetSilverServerHostname` method with your own.
+- Manually go to the [appropriate entrypoint class](https://github.com/NotsoanoNimus/CIS-566-project-client/blob/master/SilverClient/src/main/java/xyz/xmit/silverclient/SilverLibraryApplication.java#L15) and swap the returned string value in the `getTargetSilverServerHostname` method with your own.
