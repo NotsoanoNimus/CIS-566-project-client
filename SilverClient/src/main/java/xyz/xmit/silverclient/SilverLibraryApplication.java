@@ -8,7 +8,11 @@ public final class SilverLibraryApplication extends Application
 {
     public static String getTargetSilverServerHostname()
     {
-        return "localhost";
+        var envHost = System.getenv("SILVER_TARGET_HOSTNAME");
+
+        return envHost != null
+            ? envHost
+            : "localhost";
     }
 
     @Override
