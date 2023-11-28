@@ -8,7 +8,7 @@ import xyz.xmit.silverclient.utilities.SilverUtilities;
 public final class HomeSilverState
     extends BaseContainerSilverState
 {
-    private HomeScreenData dashboardData = null;
+    private HomeScreenData dashboardData;
 
     public HomeSilverState(SilverApplicationContext parentContext, Node containerNode, Node sourceEventNode)
     {
@@ -20,14 +20,9 @@ public final class HomeSilverState
     {
         if (this.dashboardData != null) return;
 
-        // load data
         var apiResponse = ApiFacade.loadDashboard();
-        if (apiResponse == null || apiResponse.getData() == null) {
-            SilverUtilities.ShowAlert("Failed to properly parse or download dashboard data from the server.", "Dashboard Error", true);
-        }
 
         assert apiResponse != null;
-
         this.dashboardData = apiResponse.getData();
     }
 
@@ -36,6 +31,16 @@ public final class HomeSilverState
 
     @Override
     public void onPopup() {}
+
+    @Override
+    public void onRefreshData()
+    {
+        this.dashboardData = null;
+
+        this.onLoadContainer();
+
+        this.getParentContext().setDashboardData(this.dashboardData);
+    }
 
     @Override
     public void onHome()
