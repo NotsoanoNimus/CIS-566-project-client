@@ -17,6 +17,8 @@ public final class SilverApplicationContext
 
     private HomeScreenData dashboardData;
 
+    private HomeScreenData dashboardDataFiltered;
+
     public SilverApplicationContext(PrimaryWindowController primaryWindowController)
     {
         this.primaryWindowController = primaryWindowController;
@@ -70,7 +72,7 @@ public final class SilverApplicationContext
 
     public HomeScreenData getDashboardData()
     {
-        return this.dashboardData;
+        return this.dashboardDataFiltered != null ? this.dashboardDataFiltered : this.dashboardData;
     }
 
     public void setDashboardData(HomeScreenData data)

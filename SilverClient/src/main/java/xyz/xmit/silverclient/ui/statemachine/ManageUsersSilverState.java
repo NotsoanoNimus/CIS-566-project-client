@@ -16,12 +16,14 @@ public final class ManageUsersSilverState
 
     @Override
     public void onAuthenticate() {
-
     }
 
     @Override
     public void onPopup() {
+    }
 
+    @Override
+    public void onRefreshData() {
     }
 
     @Override

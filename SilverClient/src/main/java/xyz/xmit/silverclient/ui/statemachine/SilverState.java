@@ -8,6 +8,8 @@ public interface SilverState
 
     public void onPopup();
 
+    public void onRefreshData();
+
     public void onHome();
 
     public void onManageUsers();

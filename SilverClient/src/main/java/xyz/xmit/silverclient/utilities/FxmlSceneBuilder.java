@@ -66,7 +66,7 @@ public final class FxmlSceneBuilder
         var loader = (FXMLLoader)this.stage.getScene().getUserData();
 
         HookedController controller = loader.getController();
-        SilverUtilities.RunDelayedEvent(1.5, event -> controller.controllerEntryHook());
+        controller.controllerEntryHook();
 
         this.stage.getScene().setUserData(null);
 
@@ -113,15 +113,7 @@ public final class FxmlSceneBuilder
             ioException.printStackTrace();
 
             // Show an error alert about failing to load the scene onto the stage.
-            var alert = new Alert(
-                    Alert.AlertType.ERROR,
-                    "Failed to load the next panel onto the stage.",
-                    ButtonType.OK);
-
-            // More details, synchronously show the pop-up.
-            alert.setHeaderText("Something went wrong!");
-            alert.setTitle("Application Error");
-            alert.showAndWait();
+            SilverUtilities.ShowAlert("Failed to load the next panel onto the stage.", "Failed to load scene!");
 
             // Close and exit the given stage reference if set to.
             if (this.closesStageOnBuildError) {

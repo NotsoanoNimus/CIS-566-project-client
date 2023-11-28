@@ -8,7 +8,7 @@ import java.util.UUID;
 public final class InventoryItemEdition
     extends BaseModelSoftDeletes<UUID>
 {
-    public InventoryItem inventoryItem;
+    public InventoryItem item;
 
     @DataField
     public UUID inventory_item_id;

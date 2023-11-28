@@ -38,4 +38,34 @@ public final class InventoryItemInstance
     public String getBaseModelUri() {
         return "item-edition-instance";
     }
+
+    public String getTitle()
+    {
+        return this.edition.item.title;
+    }
+
+    public String getEdition()
+    {
+        return this.edition.edition;
+    }
+
+    public String getSku()
+    {
+        return String.valueOf(this.barcode_sku);
+    }
+
+    public String getState()
+    {
+        return this.state;
+    }
+
+    public String getCondition()
+    {
+        return this.condition;
+    }
+
+    public Date getAcquiredAt()
+    {
+        return this.acquired_at;
+    }
 }

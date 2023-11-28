@@ -7,6 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.util.Duration;
 
 public final class SilverUtilities
@@ -74,5 +76,12 @@ public final class SilverUtilities
                 System.exit(0);
             }
         }
+    }
+
+    public static <T> TableColumn<T, ?> GetTableColumnByName(TableView<T> tableView, String name)
+    {
+        for (TableColumn<T, ?> col : tableView.getColumns())
+            if (col.getText().equalsIgnoreCase(name)) return col;
+        return null;
     }
 }

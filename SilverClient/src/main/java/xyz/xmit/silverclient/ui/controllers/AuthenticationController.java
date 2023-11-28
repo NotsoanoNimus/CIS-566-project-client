@@ -72,7 +72,7 @@ public final class AuthenticationController
             // On request success, asynchronously pause for ~2.5 seconds then swap to the primary app scene.
             if (apiResponse.getSuccess()) {
                 SilverUtilities.RunDelayedEvent(
-                        2.5,
+                        1.25,
                         event -> new FxmlSceneBuilder("primary-window.fxml", stageReference)
                                     .setWidth(1000)
                                     .setHeight(750)

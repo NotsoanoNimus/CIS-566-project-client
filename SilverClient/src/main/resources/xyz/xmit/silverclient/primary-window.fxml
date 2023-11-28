@@ -74,19 +74,23 @@
    </VBox>
    <Pane fx:id="homePane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0">
       <TextField fx:id="tfSearchHome" layoutX="20.0" layoutY="24.0" prefHeight="26.0" prefWidth="296.0" promptText="Search Items by title or SKU..." />
-      <Button fx:id="bSearchHome" layoutX="316.0" layoutY="24.0" mnemonicParsing="false" text="Search" />
-      <ScrollPane layoutX="20.0" layoutY="60.0" prefHeight="640.0" prefWidth="820.0">
-         <TableView fx:id="tableHome" prefHeight="640.0" prefWidth="835.0">
-            <columns>
-               <TableColumn prefWidth="221.0" text="Item Title" />
-               <TableColumn prefWidth="100.0" text="Edition" />
-               <TableColumn prefWidth="120.0" text="SKU#" />
-               <TableColumn prefWidth="100.0" text="Status" />
-               <TableColumn prefWidth="100.0" text="Condition" />
-               <TableColumn prefWidth="182.0" text="Acquired At" />
-            </columns>
-         </TableView>
-      </ScrollPane>
+      <Button fx:id="bRefreshHome" onMouseClicked="#doRefresh" layoutX="316.0" layoutY="24.0" mnemonicParsing="false" text="Refresh" />
+      <TableView fx:id="tableHome" layoutX="20.0" layoutY="60.0" prefHeight="640.0" prefWidth="820.0">
+         <placeholder>
+            <Label text="Loading..." />
+         </placeholder>
+         <columns>
+            <TableColumn prefWidth="210.0" text="Item Title" />
+            <TableColumn prefWidth="100.0" text="Edition" />
+            <TableColumn prefWidth="100.0" text="SKU#" />
+            <TableColumn prefWidth="100.0" text="Status" />
+            <TableColumn prefWidth="100.0" text="Condition" />
+            <TableColumn prefWidth="180.0" text="Acquired At" />
+         </columns>
+         <cursor>
+            <Cursor fx:constant="WAIT" />
+         </cursor>
+      </TableView>
    </Pane>
    <Pane fx:id="manageUsersPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
    </Pane>
