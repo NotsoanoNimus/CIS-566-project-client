@@ -1,9 +1,9 @@
 package xyz.xmit.silverclient.ui.statemachine;
 
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import xyz.xmit.silverclient.api.ApiFacade;
 import xyz.xmit.silverclient.models.HomeScreenData;
-import xyz.xmit.silverclient.utilities.SilverUtilities;
 
 public final class HomeSilverState
     extends BaseContainerSilverState
@@ -20,17 +20,18 @@ public final class HomeSilverState
     {
         if (this.dashboardData != null) return;
 
+        this.getParentContext().getController().tableHomeLabel.setText("Loading...");
+
         var apiResponse = ApiFacade.loadDashboard();
 
         assert apiResponse != null;
         this.dashboardData = apiResponse.getData();
+
+        this.getAssociatedContainerNode().setCursor(Cursor.DEFAULT);
+        this.getParentContext().getController().tableHomeLabel.setText("No results");
+
+        this.getParentContext().setDashboardData(this.dashboardData);
     }
-
-    @Override
-    public void onAuthenticate() {}
-
-    @Override
-    public void onPopup() {}
 
     @Override
     public void onRefreshData()
@@ -40,12 +41,12 @@ public final class HomeSilverState
         this.onLoadContainer();
 
         this.getParentContext().setDashboardData(this.dashboardData);
+        this.getParentContext().getController().tfSearchHome.setText(null);
     }
 
     @Override
     public void onHome()
     {
-        this.getParentContext().setDashboardData(this.dashboardData);
     }
 
     @Override
@@ -61,6 +62,11 @@ public final class HomeSilverState
 
     @Override
     public void onLogout()
+    {
+    }
+
+    @Override
+    public void onRevertState()
     {
     }
 }

@@ -9,6 +9,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import xyz.xmit.silverclient.SilverLibraryApplication;
 import xyz.xmit.silverclient.ui.controllers.HookedController;
+import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
 
 import java.io.IOException;
 
@@ -59,18 +60,29 @@ public final class FxmlSceneBuilder
         this.stage = targetStage;
     }
 
-    public <T extends Class<? extends HookedController>> boolean buildWithBaseControllerAction(T controllerType)
+    public <T extends Class<? extends HookedController>> HookedController buildWithBaseControllerAction(T controllerType)
     {
-        var result = this.build();
+        return this.buildWithBaseControllerAction(controllerType, null);
+    }
+
+    public <T extends Class<? extends HookedController>> HookedController buildWithBaseControllerAction(
+            T controllerType,
+            SilverApplicationContext injectedContext)
+    {
+        this.build();
 
         var loader = (FXMLLoader)this.stage.getScene().getUserData();
 
         HookedController controller = loader.getController();
         controller.controllerEntryHook();
 
+        if (injectedContext != null) {
+            controller.setApplicationContext(injectedContext);
+        }
+
         this.stage.getScene().setUserData(null);
 
-        return result;
+        return controller;
     }
 
     public boolean build() {

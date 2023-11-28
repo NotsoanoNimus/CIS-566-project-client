@@ -4,10 +4,6 @@ public interface SilverState
 {
     public SilverApplicationContext getParentContext();
 
-    public void onAuthenticate();
-
-    public void onPopup();
-
     public void onRefreshData();
 
     public void onHome();
@@ -17,4 +13,6 @@ public interface SilverState
     public void onManageItems();
 
     public void onLogout() throws SilverStateException;
+
+    public void onRevertState();
 }

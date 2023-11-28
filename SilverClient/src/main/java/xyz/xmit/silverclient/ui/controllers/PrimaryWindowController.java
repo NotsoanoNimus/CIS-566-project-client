@@ -1,14 +1,20 @@
 package xyz.xmit.silverclient.ui.controllers;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import xyz.xmit.silverclient.models.HomeScreenData;
 import xyz.xmit.silverclient.models.InventoryItemInstance;
+import xyz.xmit.silverclient.ui.statemachine.PopupSilverState;
 import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
 import xyz.xmit.silverclient.ui.statemachine.SilverStateException;
+import xyz.xmit.silverclient.utilities.FxmlSceneBuilder;
 import xyz.xmit.silverclient.utilities.SilverUtilities;
 
 public final class PrimaryWindowController
@@ -33,6 +39,9 @@ public final class PrimaryWindowController
 
     @FXML
     public TableView<InventoryItemInstance> tableHome;
+
+    @FXML
+    public Label tableHomeLabel;
 
     @FXML
     public TextField tfSearchHome;
@@ -73,8 +82,26 @@ public final class PrimaryWindowController
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() != 2 || row.isEmpty()) return;
 
+                // Deny multiple pop-up states. Only one pop-up should be available at a time.
+                if (this.context.getCurrentState() instanceof PopupSilverState)
+                {
+                    return;
+                }
+
                 // Spawn a popup window and enter a pop-up state.
-                System.out.println("Double-click!");
+                var hookController = new FxmlSceneBuilder("item-instance-detail.fxml", new Stage())
+                        .setWidth(800)
+                        .setHeight(600)
+                        .setTitle("Item Instance | #" + row.getItem().barcode_sku + " | " + row.getItem().getTitle())
+                        .setResizeable(false)
+                        .setUndecorated(true)
+                        .buildWithBaseControllerAction(ItemInstanceDetailController.class, this.context);
+
+                ((ItemInstanceDetailController)hookController).setInventoryItemInstance(row.getItem());
+
+                var previousState = this.context.getCurrentState().getClass();
+                this.context.setCurrentState(PopupSilverState.class);
+                ((PopupSilverState)this.context.getCurrentState()).setPreviousStateClass(previousState);
             });
 
             return row;
@@ -83,26 +110,56 @@ public final class PrimaryWindowController
         // Create a new context and immediately call 'on-home' to load data and display dashboard data.
         this.context = new SilverApplicationContext(this);
 
-        this.context.getCurrentState().onHome();
-
         this.tableHome.setCursor(Cursor.DEFAULT);
     }
 
-    public void refreshDashboardData()
+    public void refreshDashboardData(HomeScreenData dashboardData)
     {
-        var data = this.context.getDashboardData();
-        if (data == null) return;
+        if (dashboardData == null) return;
 
-        this.tableHome.getItems().setAll(data.instances);
+        this.tableHome.getItems().setAll(dashboardData.instances);
     }
 
-    public void onKeyFilterDashboard()
+    /**
+     * Capture key-press events on the Home dashboard for filtering the list of instances.
+     *
+     * @param e The key-press event.
+     */
+    public void onKeyFilterDashboard(KeyEvent e)
     {
+        e.consume();
+
+        if (this.tfSearchHome.getText().isEmpty()) {
+            this.context.setDashboardDataFiltered(this.context.getDashboardData());
+            return;
+        }
+
+        // First try to parse the input as a numeric barcode SKU.
         try {
             var parsedSku = Integer.parseUnsignedInt(this.tfSearchHome.getText());
 
+            var filteredSet = this.context.getDashboardData().instances.stream().filter(
+                    i -> String.valueOf(i.barcode_sku).contains(String.valueOf(parsedSku))).toList();
+
+            var newData = new HomeScreenData();
+            newData.instances = filteredSet;
+
+            this.context.setDashboardDataFiltered(newData);
+        } catch (NumberFormatException ex) {
+            // If parsing a number doesn't work, just compare the string against any book titles.
+            try {
+                var filteredSet = this.context.getDashboardData().instances.stream().filter(
+                        i -> i.getTitle().trim().toLowerCase().contains(this.tfSearchHome.getText().trim().toLowerCase())).toList();
+
+                var newData = new HomeScreenData();
+                newData.instances = filteredSet;
+
+                this.context.setDashboardDataFiltered(newData);
+            } catch (Exception innerEx) {
+                // do not crash the app when there's an exception searching...
+            }
         } catch (Exception ex) {
-            // do nothing...
+            // do nothing as well...
         }
     }
 
