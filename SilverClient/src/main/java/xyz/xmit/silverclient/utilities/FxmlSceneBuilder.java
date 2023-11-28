@@ -28,6 +28,7 @@ import java.io.IOException;
  * in varying situations, as well as fluent (human-readable) constructions of new UI components.
  */
 public final class FxmlSceneBuilder
+    implements IFxmlSceneBuilder
 {
     private String fxmlResourceName;
 
@@ -151,7 +152,7 @@ public final class FxmlSceneBuilder
         return title;
     }
 
-    public FxmlSceneBuilder setTitle(String title) {
+    public IFxmlSceneBuilder setTitle(String title) {
         this.title = title;
         this.stage.setTitle(title);
 
@@ -162,7 +163,7 @@ public final class FxmlSceneBuilder
         return width;
     }
 
-    public FxmlSceneBuilder setWidth(int width) {
+    public IFxmlSceneBuilder setWidth(int width) {
         this.width = width;
         this.stage.setWidth(width);
 
@@ -173,7 +174,7 @@ public final class FxmlSceneBuilder
         return height;
     }
 
-    public FxmlSceneBuilder setHeight(int height) {
+    public IFxmlSceneBuilder setHeight(int height) {
         this.height = height;
         this.stage.setHeight(height);
 
@@ -184,7 +185,7 @@ public final class FxmlSceneBuilder
         return undecorated;
     }
 
-    public FxmlSceneBuilder setUndecorated(boolean isUndecorated) {
+    public IFxmlSceneBuilder setUndecorated(boolean isUndecorated) {
         this.undecorated = isUndecorated;
 
         return this;
@@ -194,7 +195,7 @@ public final class FxmlSceneBuilder
         return exitMonitoring;
     }
 
-    public FxmlSceneBuilder setExitMonitoring(boolean isExitMonitoring) {
+    public IFxmlSceneBuilder setExitMonitoring(boolean isExitMonitoring) {
         this.exitMonitoring = isExitMonitoring;
 
         return this;
@@ -204,7 +205,7 @@ public final class FxmlSceneBuilder
         return isResizeable;
     }
 
-    public FxmlSceneBuilder setResizeable(boolean resizeable) {
+    public IFxmlSceneBuilder setResizeable(boolean resizeable) {
         this.isResizeable = resizeable;
         this.stage.setResizable(resizeable);
 
@@ -215,7 +216,7 @@ public final class FxmlSceneBuilder
         return stylesheets;
     }
 
-    public FxmlSceneBuilder setStylesheets(String[] stylesheets) {
+    public IFxmlSceneBuilder setStylesheets(String[] stylesheets) {
         this.stylesheets = stylesheets;
 
         return this;
@@ -229,7 +230,7 @@ public final class FxmlSceneBuilder
         return closesStageOnBuildError;
     }
 
-    public FxmlSceneBuilder setClosesStageOnBuildError(boolean closesStageOnBuildError) {
+    public IFxmlSceneBuilder setClosesStageOnBuildError(boolean closesStageOnBuildError) {
         this.closesStageOnBuildError = closesStageOnBuildError;
 
         return this;
