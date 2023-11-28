@@ -2,22 +2,24 @@ package xyz.xmit.silverclient.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.List;
 import java.util.UUID;
 
-public final class Author
+public final class Charge
     extends BaseModelSoftDeletes<UUID>
 {
-    @JsonIgnore
-    public Object pivot;
-
-    public List<Tag> tags;
+    public Checkout checkout;
 
     @DataField
-    public String name;
+    public UUID checkout_id;
+
+    @DataField
+    public double amount;
+
+    @DataField
+    public String notes;
 
     @Override
     public String getBaseModelUri() {
-        return "author";
+        return "charge";
     }
 }

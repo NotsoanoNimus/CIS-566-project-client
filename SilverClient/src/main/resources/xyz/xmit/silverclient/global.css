@@ -9,3 +9,16 @@
     -fx-font-weight: bold;
     -fx-font-family: monospace;
 }
+
+#mainMenuContainer .menu-button {
+    -fx-cursor: pointer;
+    -fx-background-color: #fac489;
+}
+
+#mainMenuContainer .menu-button:hover, #mainMenuContainer .menu-button:focused {
+    -fx-background-color: #fcecc4;
+}
+
+#mainMenuContainer .menu-active {
+    -fx-background-color: #fcecc4 !important;
+}

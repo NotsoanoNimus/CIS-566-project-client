@@ -8,6 +8,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import xyz.xmit.silverclient.api.ApiFacade;
 import xyz.xmit.silverclient.utilities.FxmlSceneBuilder;
 import xyz.xmit.silverclient.utilities.SilverUtilities;
 import xyz.xmit.silverclient.api.HttpApiClient;
@@ -54,12 +55,16 @@ public final class AuthenticationController
 
         try {
             // Attempt to contact the API with the given username/password combination.
-            var apiResponse = HttpApiClient.getInstance().tryLogin(
-                    this.tfUsername.getText().trim().toLowerCase(), this.tfPassword.getText());
+            var username = this.tfUsername.getText().trim().toLowerCase();
+            var password = this.tfPassword.getText();
+            var apiResponse = ApiFacade.login(username, password);
 
             // Set the response content and color based on the API response.
+            var responseData = apiResponse.getData();
+            if (responseData == null) responseData = apiResponse.getEncapsulatedMessageApiResponse().getMessage();
+
             this.lLoginStatus.setTextFill(apiResponse.getSuccess() ? Color.GREEN : Color.DARKRED);
-            this.lLoginStatus.setText(apiResponse.getData());
+            this.lLoginStatus.setText(responseData);
 
             // Get the current Stage reference.
             var stageReference = (Stage)this.apAuth.getScene().getWindow();
@@ -67,12 +72,14 @@ public final class AuthenticationController
             // On request success, asynchronously pause for ~2.5 seconds then swap to the primary app scene.
             if (apiResponse.getSuccess()) {
                 SilverUtilities.RunDelayedEvent(
-                        2.5,
+                        1.25,
                         event -> new FxmlSceneBuilder("primary-window.fxml", stageReference)
-                                    .setWidth(800)
-                                    .setHeight(600)
+                                    .setWidth(1000)
+                                    .setHeight(750)
                                     .setTitle("Silver Library Management | Dashboard")
-                                    .build());
+                                    .setResizeable(false)
+                                    .setUndecorated(false)
+                                    .buildWithBaseControllerAction(PrimaryWindowController.class));
 
                 return;
             }

@@ -2,6 +2,7 @@ package xyz.xmit.silverclient.api;
 
 import xyz.xmit.silverclient.api.request.BaseApiRequest;
 import xyz.xmit.silverclient.api.request.GenericGetRequest;
+import xyz.xmit.silverclient.models.BaseModel;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -15,7 +16,7 @@ import java.security.cert.X509Certificate;
 
 public final class HttpApiClient
 {
-    private static HttpApiClient instance;
+    private static HttpApiClient instance = new HttpApiClient();
 
     private ApiAuthenticationContext authenticationContext;
 
@@ -25,20 +26,14 @@ public final class HttpApiClient
                 public X509Certificate[] getAcceptedIssuers() {
                     return null;
                 }
-
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-
-                }
-
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {}
             };
 
             var sc = SSLContext.getInstance("SSL");
             sc.init(null, new TrustManager[] { trm }, null);
 
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
             HttpsURLConnection.setDefaultHostnameVerifier(CustomHostnameVerification.instance);
         } catch (Exception ex) {
             System.out.println("Failed to initialize default SSLSocketFactory");
@@ -57,9 +52,12 @@ public final class HttpApiClient
         this.authenticationContext = authenticationContext;
     }
 
-    private WrappedApiResponse readWrappedApiResponseOrDie(HttpsURLConnection connection)
+    public <T> WrappedApiResponse<T> readWrappedApiResponseOrDie(HttpsURLConnection connection, Class<T> dummyModelClass)
             throws Exception
     {
+        System.out.println("Outgoing Connection: " + connection.getRequestMethod() + " " + connection.getURL());
+        System.out.println("-----");
+
         connection.connect();
 
         var responseCode = connection.getResponseCode();
@@ -75,38 +73,29 @@ public final class HttpApiClient
         // Need to be able to fall back to an acceptable Wrapper API response in the event
         //   that a server error does not come back in the deserializable JSON format we expect.
         return responseCode < HttpURLConnection.HTTP_BAD_REQUEST
-            ? new WrappedApiResponse(response)
-            : new WrappedApiResponse(response, false, responseMessage);
+            ? new WrappedApiResponse<T>(response, dummyModelClass)
+            : new WrappedApiResponse<T>(response, dummyModelClass, false, responseMessage);
     }
 
-    public synchronized WrappedApiResponse tryLogin(String username, String password)
+    public <X extends BaseApiRequest, Y> WrappedApiResponse<Y> GetAsync(X request, Class<Y> blankModelClass) throws Exception
     {
-        String apiKey;
-        WrappedApiResponse responseObject;
+        var connection = HttpConnectionFactory.CreateSecure(request, this.authenticationContext);
 
-        try {
-            var connection = HttpConnectionFactory.CreateSecure(
-                    new GenericGetRequest().setMethod("GET").setHostUrl("delegate"),
-                    new ApiAuthenticationContext(username, password));
+        connection.connect();
 
-            responseObject = this.readWrappedApiResponseOrDie(connection);
+        return this.<Y>readWrappedApiResponseOrDie(connection, blankModelClass);
+    }
 
-            if (!responseObject.getSuccess()) {
-                return responseObject;
-            }
-        } catch (Exception ex) {
-            System.out.println("Failed to establish authentication request.");
-            ex.printStackTrace();
+    public <TId, Y extends BaseModel<TId>> WrappedApiResponse<Y> GetAsync(TId objectId, Class<Y> blankModelClass)
+            throws Exception
+    {
+        var connection = HttpConnectionFactory.CreateSecure(
+                new GenericGetRequest<>(objectId, blankModelClass),
+                this.authenticationContext);
 
-            return new WrappedApiResponse(false, "An error occurred while trying to authenticate.");
-        }
+        connection.connect();
 
-        apiKey = responseObject.getData();
-
-        instance.setAuthenticationContext(new ApiAuthenticationContext(username, password, apiKey));
-
-        System.out.println("Logged in as: " + username);
-        return new WrappedApiResponse(true, "Success!");
+        return this.<Y>readWrappedApiResponseOrDie(connection, blankModelClass);
     }
 
     public synchronized <X extends BaseApiRequest> WrappedApiResponse DeleteAsync(X request)

@@ -1,20 +1,19 @@
 package xyz.xmit.silverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public abstract class BaseModel<TPrimary>
+    implements Model
 {
-    protected TPrimary id;
+    @JsonProperty
+    @DataField
+    public TPrimary id;
 
-    protected boolean softDeletes = true;
-
-    public BaseModel() {}
-
-    public BaseModel(boolean softDeletes)
-    {
-        this.softDeletes = softDeletes;
-    }
-
+    @JsonIgnore
     public abstract String getBaseModelUri();
 
+    @JsonIgnore
     public TPrimary getPrimaryId()
     {
         return this.id;

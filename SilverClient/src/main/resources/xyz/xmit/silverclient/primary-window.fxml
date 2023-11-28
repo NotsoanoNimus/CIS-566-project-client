@@ -1,14 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="xyz.xmit.silverclient.ui.controllers.PrimaryWindowController"
-            prefHeight="600.0" prefWidth="800.0">
-
+<AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.xmit.silverclient.ui.controllers.PrimaryWindowController">
+   <VBox fx:id="mainMenuContainer" layoutY="8.0" prefHeight="596.0" prefWidth="135.0" style="-fx-background-color: #fac489;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ImageView fitHeight="148.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true">
+          <Image url="@images/silver_logo.png" />
+      </ImageView>
+      <Button fx:id="homeButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doHome" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Home">
+         <graphic>
+            <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/home_button.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="manageUsersButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doManageUsers" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Manage Users">
+         <graphic>
+            <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/users_icon.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="manageItemsButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doManageItems" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Manage Items">
+         <graphic>
+            <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/details_icon.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doLogout" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Logout">
+         <graphic>
+            <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/sign-out_icon.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+   </VBox>
+<!--   <StackPane layoutX="134.0" prefHeight="750.0" prefWidth="866.0">-->
+      <Pane fx:id="manageUsersPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
+      </Pane>
+      <Pane fx:id="manageItemsPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
+      </Pane>
+      <Pane fx:id="homePane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0">
+         <cursor>
+            <Cursor fx:constant="WAIT" />
+         </cursor>
+         <TextField fx:id="tfSearchHome" onKeyTyped="#onKeyFilterDashboard" layoutX="20.0" layoutY="24.0" prefHeight="26.0" prefWidth="296.0" promptText="Search Items by title or SKU..." />
+         <Button fx:id="bRefreshHome" onMouseClicked="#doRefresh" layoutX="316.0" layoutY="24.0" mnemonicParsing="false" text="Refresh" />
+         <TableView fx:id="tableHome" layoutX="20.0" layoutY="60.0" prefHeight="640.0" prefWidth="820.0">
+            <placeholder>
+               <Label fx:id="tableHomeLabel" text="Loading..." />
+            </placeholder>
+            <columns>
+               <TableColumn prefWidth="210.0" text="Item Title" />
+               <TableColumn prefWidth="100.0" text="Edition" />
+               <TableColumn prefWidth="100.0" text="SKU#" />
+               <TableColumn prefWidth="100.0" text="Status" />
+               <TableColumn prefWidth="100.0" text="Condition" />
+               <TableColumn prefWidth="180.0" text="Acquired At" />
+            </columns>
+            <cursor>
+               <Cursor fx:constant="WAIT" />
+            </cursor>
+         </TableView>
+      </Pane>
+<!--   </StackPane>-->
 </AnchorPane>

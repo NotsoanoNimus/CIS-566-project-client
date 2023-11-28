@@ -6,7 +6,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import xyz.xmit.silverclient.SilverLibraryApplication;
+import xyz.xmit.silverclient.ui.controllers.HookedController;
+import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
 
 import java.io.IOException;
 
@@ -45,12 +48,41 @@ public final class FxmlSceneBuilder
 
     private boolean closesStageOnBuildError = true;
 
+    private boolean undecorated = true;
+
+    private boolean exitMonitoring = true;
+
     /**
      * @see FxmlSceneBuilder
      */
     public FxmlSceneBuilder(String fxmlResourceName, Stage targetStage) {
         this.fxmlResourceName = fxmlResourceName;
         this.stage = targetStage;
+    }
+
+    public <T extends Class<? extends HookedController>> HookedController buildWithBaseControllerAction(T controllerType)
+    {
+        return this.buildWithBaseControllerAction(controllerType, null);
+    }
+
+    public <T extends Class<? extends HookedController>> HookedController buildWithBaseControllerAction(
+            T controllerType,
+            SilverApplicationContext injectedContext)
+    {
+        this.build();
+
+        var loader = (FXMLLoader)this.stage.getScene().getUserData();
+
+        HookedController controller = loader.getController();
+        controller.controllerEntryHook();
+
+        if (injectedContext != null) {
+            controller.setApplicationContext(injectedContext);
+        }
+
+        this.stage.getScene().setUserData(null);
+
+        return controller;
     }
 
     public boolean build() {
@@ -61,31 +93,39 @@ public final class FxmlSceneBuilder
             // Attempt to create the new scene with the resource FXML and load it onto the target stage.
             var primaryWindowScene = new Scene(loader.load());
 
+            // Preserve a loader reference to get in case it's needed in an out Build wrapper call.
+            primaryWindowScene.setUserData(loader);
+
             // Load all relevant stylesheets.
             for (var resourceName : this.stylesheets) {
                 primaryWindowScene.getStylesheets()
                         .add(SilverLibraryApplication.class.getResource(resourceName).toExternalForm());
             }
 
-            if (this.stage.getStyle() != StageStyle.UNDECORATED) {
-                this.stage.initStyle(StageStyle.UNDECORATED);
+            // Decorate or un-decorate based on settings. Cannot be done if the stage has already been shown.
+            if (!this.stage.isShowing()) {
+                if (this.undecorated && this.stage.getStyle() != StageStyle.UNDECORATED) {
+                    this.stage.initStyle(StageStyle.UNDECORATED);
+                } else if (!this.undecorated && this.stage.getStyle() != StageStyle.DECORATED) {
+                    this.stage.initStyle(StageStyle.DECORATED);
+                }
             }
 
+            // Set the scene and show.
             this.stage.setScene(primaryWindowScene);
             this.stage.show();
 
+            // Add an exit monitoring interface.
+            if (this.exitMonitoring) {
+                primaryWindowScene.getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, this::closeWindowEvent);
+            }
+
             return true;
         } catch (IOException ioException) {
-            // Show an error alert about failing to load the scene onto the stage.
-            var alert = new Alert(
-                    Alert.AlertType.ERROR,
-                    "Failed to load the next panel onto the stage.",
-                    ButtonType.OK);
+            ioException.printStackTrace();
 
-            // More details, synchronously show the pop-up.
-            alert.setHeaderText("Something went wrong!");
-            alert.setTitle("Application Error");
-            alert.showAndWait();
+            // Show an error alert about failing to load the scene onto the stage.
+            SilverUtilities.ShowAlert("Failed to load the next panel onto the stage.", "Failed to load scene!");
 
             // Close and exit the given stage reference if set to.
             if (this.closesStageOnBuildError) {
@@ -93,6 +133,13 @@ public final class FxmlSceneBuilder
             }
 
             return false;
+        }
+    }
+
+    private void closeWindowEvent(WindowEvent event)
+    {
+        if (!SilverUtilities.ShowLogoutDialog()) {
+            event.consume();
         }
     }
 
@@ -129,6 +176,26 @@ public final class FxmlSceneBuilder
     public FxmlSceneBuilder setHeight(int height) {
         this.height = height;
         this.stage.setHeight(height);
+
+        return this;
+    }
+
+    public boolean isUndecorated() {
+        return undecorated;
+    }
+
+    public FxmlSceneBuilder setUndecorated(boolean isUndecorated) {
+        this.undecorated = isUndecorated;
+
+        return this;
+    }
+
+    public boolean isExitMonitoring() {
+        return exitMonitoring;
+    }
+
+    public FxmlSceneBuilder setExitMonitoring(boolean isExitMonitoring) {
+        this.exitMonitoring = isExitMonitoring;
 
         return this;
     }
