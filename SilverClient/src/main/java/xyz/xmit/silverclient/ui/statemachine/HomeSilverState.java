@@ -8,8 +8,6 @@ import xyz.xmit.silverclient.models.HomeScreenData;
 public final class HomeSilverState
     extends BaseContainerSilverState
 {
-    private HomeScreenData dashboardData;
-
     public HomeSilverState(SilverApplicationContext parentContext, Node containerNode, Node sourceEventNode)
     {
         super(parentContext, containerNode, sourceEventNode);
@@ -18,29 +16,26 @@ public final class HomeSilverState
     @Override
     protected void onLoadContainer()
     {
-        if (this.dashboardData != null) return;
+        if (this.getParentContext().getDashboardData() != null) return;
 
         this.getParentContext().getController().tableHomeLabel.setText("Loading...");
 
         var apiResponse = ApiFacade.loadDashboard();
 
         assert apiResponse != null;
-        this.dashboardData = apiResponse.getData();
+        var responseData = apiResponse.getData();
 
         this.getAssociatedContainerNode().setCursor(Cursor.DEFAULT);
         this.getParentContext().getController().tableHomeLabel.setText("No results");
 
-        this.getParentContext().setDashboardData(this.dashboardData);
+        this.getParentContext().setDashboardData(responseData);
     }
 
     @Override
     public void onRefreshData()
     {
-        this.dashboardData = null;
-
         this.onLoadContainer();
 
-        this.getParentContext().setDashboardData(this.dashboardData);
         this.getParentContext().getController().tfSearchHome.setText(null);
     }
 
