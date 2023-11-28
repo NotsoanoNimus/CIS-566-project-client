@@ -10,6 +10,8 @@ public final class InventoryItemInstance
 {
     public InventoryItemEdition edition;
 
+    public String state;
+
     @DataField
     public UUID inventory_item_edition_id;
 

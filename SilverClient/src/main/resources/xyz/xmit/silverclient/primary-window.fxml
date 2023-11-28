@@ -11,7 +11,7 @@
       <ImageView fitHeight="148.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true">
           <Image url="@images/silver_logo.png" />
       </ImageView>
-      <Button fx:id="homeButton" alignment="BASELINE_LEFT" onMouseClicked="#doHome" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Home">
+      <Button fx:id="homeButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doHome" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Home">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -26,7 +26,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="manageUsersButton" alignment="BASELINE_LEFT" onMouseClicked="#doManageUsers" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Manage Users">
+      <Button fx:id="manageUsersButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doManageUsers" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Manage Users">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -41,7 +41,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="manageItemsButton" alignment="BASELINE_LEFT" onMouseClicked="#doManageItems" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Manage Items">
+      <Button fx:id="manageItemsButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doManageItems" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Manage Items">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -73,10 +73,10 @@
       </Button>
    </VBox>
    <Pane fx:id="homePane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0">
-      <TextField layoutX="20.0" layoutY="24.0" prefHeight="26.0" prefWidth="296.0" promptText="Search Items by title or SKU..." />
-      <Button layoutX="316.0" layoutY="24.0" mnemonicParsing="false" text="Search" />
+      <TextField fx:id="tfSearchHome" layoutX="20.0" layoutY="24.0" prefHeight="26.0" prefWidth="296.0" promptText="Search Items by title or SKU..." />
+      <Button fx:id="bSearchHome" layoutX="316.0" layoutY="24.0" mnemonicParsing="false" text="Search" />
       <ScrollPane layoutX="20.0" layoutY="60.0" prefHeight="640.0" prefWidth="820.0">
-         <TableView prefHeight="640.0" prefWidth="835.0">
+         <TableView fx:id="tableHome" prefHeight="640.0" prefWidth="835.0">
             <columns>
                <TableColumn prefWidth="221.0" text="Item Title" />
                <TableColumn prefWidth="100.0" text="Edition" />
@@ -88,8 +88,8 @@
          </TableView>
       </ScrollPane>
    </Pane>
-   <Pane fx:id="manageUsersPane" visible="false" layoutX="134.0" prefHeight="750.0" prefWidth="866.0">
+   <Pane fx:id="manageUsersPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
    </Pane>
-   <Pane fx:id="manageItemsPane" visible="false" layoutX="134.0" prefHeight="750.0" prefWidth="866.0">
+   <Pane fx:id="manageItemsPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
    </Pane>
 </AnchorPane>

@@ -2,6 +2,7 @@ package xyz.xmit.silverclient.api;
 
 import xyz.xmit.silverclient.api.request.BaseApiRequest;
 import xyz.xmit.silverclient.api.request.GenericGetRequest;
+import xyz.xmit.silverclient.models.BaseModel;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -15,7 +16,7 @@ import java.security.cert.X509Certificate;
 
 public final class HttpApiClient
 {
-    private static HttpApiClient instance;
+    private static HttpApiClient instance = new HttpApiClient();
 
     private ApiAuthenticationContext authenticationContext;
 
@@ -25,20 +26,14 @@ public final class HttpApiClient
                 public X509Certificate[] getAcceptedIssuers() {
                     return null;
                 }
-
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-
-                }
-
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {}
             };
 
             var sc = SSLContext.getInstance("SSL");
             sc.init(null, new TrustManager[] { trm }, null);
 
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
             HttpsURLConnection.setDefaultHostnameVerifier(CustomHostnameVerification.instance);
         } catch (Exception ex) {
             System.out.println("Failed to initialize default SSLSocketFactory");
@@ -57,7 +52,7 @@ public final class HttpApiClient
         this.authenticationContext = authenticationContext;
     }
 
-    private <T> WrappedApiResponse<T> readWrappedApiResponseOrDie(HttpsURLConnection connection, Class<T> dummyModelClass)
+    public <T> WrappedApiResponse<T> readWrappedApiResponseOrDie(HttpsURLConnection connection, Class<T> dummyModelClass)
             throws Exception
     {
         System.out.println("Outgoing Connection: " + connection.getRequestMethod() + " " + connection.getURL());
@@ -82,39 +77,21 @@ public final class HttpApiClient
             : new WrappedApiResponse<T>(response, dummyModelClass, false, responseMessage);
     }
 
-    public synchronized WrappedApiResponse<String> tryLogin(String username, String password)
-    {
-        String apiKey;
-        WrappedApiResponse<String> responseObject;
-
-        try {
-            var connection = HttpConnectionFactory.CreateSecure(
-                    new GenericGetRequest().setMethod("GET").setHostUrl("delegate"),
-                    new ApiAuthenticationContext(username, password));
-
-            responseObject = this.readWrappedApiResponseOrDie(connection, String.class);
-
-            if (!responseObject.getSuccess()) {
-                return responseObject;
-            }
-        } catch (Exception ex) {
-            System.out.println("Failed to establish authentication request.");
-            ex.printStackTrace();
-
-            return new WrappedApiResponse<String>(false, "An error occurred while trying to authenticate.");
-        }
-
-        apiKey = responseObject.getData();
-
-        instance.setAuthenticationContext(new ApiAuthenticationContext(username, password, apiKey));
-
-        System.out.println("Logged in as: " + username);
-        return new WrappedApiResponse(true, "Success!");
-    }
-
     public <X extends BaseApiRequest, Y> WrappedApiResponse<Y> GetAsync(X request, Class<Y> blankModelClass) throws Exception
     {
         var connection = HttpConnectionFactory.CreateSecure(request, this.authenticationContext);
+
+        connection.connect();
+
+        return this.<Y>readWrappedApiResponseOrDie(connection, blankModelClass);
+    }
+
+    public <TId, Y extends BaseModel<TId>> WrappedApiResponse<Y> GetAsync(TId objectId, Class<Y> blankModelClass)
+            throws Exception
+    {
+        var connection = HttpConnectionFactory.CreateSecure(
+                new GenericGetRequest<>(objectId, blankModelClass),
+                this.authenticationContext);
 
         connection.connect();
 

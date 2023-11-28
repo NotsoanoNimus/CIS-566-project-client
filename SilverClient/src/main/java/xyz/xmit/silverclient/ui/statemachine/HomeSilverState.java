@@ -1,15 +1,14 @@
 package xyz.xmit.silverclient.ui.statemachine;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.Node;
-import xyz.xmit.silverclient.api.HttpApiClient;
-import xyz.xmit.silverclient.api.request.GenericGetRequest;
-import xyz.xmit.silverclient.models.Tag;
+import xyz.xmit.silverclient.api.ApiFacade;
+import xyz.xmit.silverclient.models.HomeScreenData;
+import xyz.xmit.silverclient.utilities.SilverUtilities;
 
 public final class HomeSilverState
     extends BaseContainerSilverState
 {
-    private boolean hasLoadedServerData = false;
+    private HomeScreenData dashboardData = null;
 
     public HomeSilverState(SilverApplicationContext parentContext, Node containerNode, Node sourceEventNode)
     {
@@ -19,17 +18,17 @@ public final class HomeSilverState
     @Override
     protected void onLoadContainer()
     {
-        if (this.hasLoadedServerData) return;
+        if (this.dashboardData != null) return;
 
         // load data
-        try {
-            var resp = HttpApiClient.getInstance().GetAsync(new GenericGetRequest().setMethod("GET").setHostUrl("tag/1"), Tag.class);
-            System.out.println(new ObjectMapper().writeValueAsString(resp));
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        var apiResponse = ApiFacade.loadDashboard();
+        if (apiResponse == null || apiResponse.getData() == null) {
+            SilverUtilities.ShowAlert("Failed to properly parse or download dashboard data from the server.", "Dashboard Error", true);
         }
 
-        this.hasLoadedServerData = true;
+        assert apiResponse != null;
+
+        this.dashboardData = apiResponse.getData();
     }
 
     @Override
@@ -39,7 +38,10 @@ public final class HomeSilverState
     public void onPopup() {}
 
     @Override
-    public void onHome() {}
+    public void onHome()
+    {
+        this.getParentContext().setDashboardData(this.dashboardData);
+    }
 
     @Override
     public void onManageUsers() {

@@ -1,5 +1,6 @@
 package xyz.xmit.silverclient.ui.statemachine;
 
+import xyz.xmit.silverclient.models.HomeScreenData;
 import xyz.xmit.silverclient.ui.controllers.PrimaryWindowController;
 
 import java.lang.reflect.Type;
@@ -13,6 +14,8 @@ public final class SilverApplicationContext
     private SilverState currentState;
 
     private final Map<Type, SilverState> stateMap;
+
+    private HomeScreenData dashboardData;
 
     public SilverApplicationContext(PrimaryWindowController primaryWindowController)
     {
@@ -58,5 +61,22 @@ public final class SilverApplicationContext
     public SilverState getCurrentState()
     {
         return this.currentState;
+    }
+
+    public PrimaryWindowController getController()
+    {
+        return this.primaryWindowController;
+    }
+
+    public HomeScreenData getDashboardData()
+    {
+        return this.dashboardData;
+    }
+
+    public void setDashboardData(HomeScreenData data)
+    {
+        this.dashboardData = data;
+
+        this.getController().refreshDashboardData();
     }
 }

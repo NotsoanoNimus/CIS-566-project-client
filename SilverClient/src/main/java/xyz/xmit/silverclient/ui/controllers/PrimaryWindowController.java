@@ -2,9 +2,12 @@ package xyz.xmit.silverclient.ui.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import xyz.xmit.silverclient.models.InventoryItemInstance;
 import xyz.xmit.silverclient.ui.statemachine.HomeSilverState;
 import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
 import xyz.xmit.silverclient.ui.statemachine.SilverStateException;
@@ -31,6 +34,15 @@ public final class PrimaryWindowController
     public Pane homePane;
 
     @FXML
+    public TableView<InventoryItemInstance> tableHome;
+
+    @FXML
+    public TextField tfSearchHome;
+
+    @FXML
+    public Button bSearchHome;
+
+    @FXML
     public Pane manageUsersPane;
 
     @FXML
@@ -39,26 +51,30 @@ public final class PrimaryWindowController
     @Override
     public void controllerEntryHook()
     {
+        // Create a new context and immediately call 'on-home' to load data and display dashboard data.
         this.context = new SilverApplicationContext(this);
 
         this.context.getCurrentState().onHome();
     }
 
+    public void refreshDashboardData()
+    {
+        var data = this.context.getDashboardData();
+    }
+
+    @FXML
     public void doHome(MouseEvent mouseEvent)
     {
         this.context.getCurrentState().onHome();
-
-        if (this.context.getCurrentState() instanceof HomeSilverState) {
-            this.homeButton.getStyleClass().add("active");
-            this.manageItemsButton.getStyleClass().remove("menu-active");
-        }
     }
 
+    @FXML
     public void doManageUsers()
     {
         this.context.getCurrentState().onManageUsers();
     }
 
+    @FXML
     public void doManageItems()
     {
         this.context.getCurrentState().onManageItems();

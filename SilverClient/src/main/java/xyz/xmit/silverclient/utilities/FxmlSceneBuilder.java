@@ -66,7 +66,7 @@ public final class FxmlSceneBuilder
         var loader = (FXMLLoader)this.stage.getScene().getUserData();
 
         HookedController controller = loader.getController();
-        controller.controllerEntryHook();
+        SilverUtilities.RunDelayedEvent(1.5, event -> controller.controllerEntryHook());
 
         this.stage.getScene().setUserData(null);
 

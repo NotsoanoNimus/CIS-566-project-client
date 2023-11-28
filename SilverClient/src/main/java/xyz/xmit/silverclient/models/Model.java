@@ -5,4 +5,5 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSerialize
 public interface Model
 {
+    public String getBaseModelUri();
 }

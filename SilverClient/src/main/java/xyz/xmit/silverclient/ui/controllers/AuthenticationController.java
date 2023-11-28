@@ -8,6 +8,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import xyz.xmit.silverclient.api.ApiFacade;
 import xyz.xmit.silverclient.utilities.FxmlSceneBuilder;
 import xyz.xmit.silverclient.utilities.SilverUtilities;
 import xyz.xmit.silverclient.api.HttpApiClient;
@@ -54,8 +55,9 @@ public final class AuthenticationController
 
         try {
             // Attempt to contact the API with the given username/password combination.
-            var apiResponse = HttpApiClient.getInstance().tryLogin(
-                    this.tfUsername.getText().trim().toLowerCase(), this.tfPassword.getText());
+            var username = this.tfUsername.getText().trim().toLowerCase();
+            var password = this.tfPassword.getText();
+            var apiResponse = ApiFacade.login(username, password);
 
             // Set the response content and color based on the API response.
             var responseData = apiResponse.getData();

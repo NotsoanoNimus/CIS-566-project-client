@@ -2,6 +2,7 @@ package xyz.xmit.silverclient.utilities;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -45,5 +46,33 @@ public final class SilverUtilities
         }
 
         return false;
+    }
+
+    public static void ShowAlert(String message, String header)
+    {
+        ShowAlert(message, header, false);
+    }
+
+    public static void ShowAlert(String message, String header, boolean exits)
+    {
+        var alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
+
+        alert.setHeaderText(header);
+        alert.setTitle("Error");
+        alert.setResizable(false);
+
+        if (exits) {
+            alert.setOnHidden(evt -> Platform.exit());
+        }
+
+        try {
+            alert.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+            if (exits) {
+                System.exit(0);
+            }
+        }
     }
 }
