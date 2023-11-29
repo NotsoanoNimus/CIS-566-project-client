@@ -1,7 +1,6 @@
 package xyz.xmit.silverclient.api;
 
-import xyz.xmit.silverclient.api.request.BaseApiRequest;
-import xyz.xmit.silverclient.api.request.GenericGetRequest;
+import xyz.xmit.silverclient.api.request.*;
 import xyz.xmit.silverclient.models.BaseModel;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -77,7 +76,10 @@ public final class HttpApiClient
             : new WrappedApiResponse<T>(response, dummyModelClass, false, responseMessage);
     }
 
-    public <X extends BaseApiRequest, Y> WrappedApiResponse<Y> GetAsync(X request, Class<Y> blankModelClass) throws Exception
+    public <X extends BaseApiRequest, Y> WrappedApiResponse<Y> GetAsync(
+            X request,
+            Class<Y> blankModelClass
+    ) throws Exception
     {
         var connection = HttpConnectionFactory.CreateSecure(request, this.authenticationContext);
 
@@ -98,20 +100,39 @@ public final class HttpApiClient
         return this.<Y>readWrappedApiResponseOrDie(connection, blankModelClass);
     }
 
-    public synchronized <X extends BaseApiRequest> WrappedApiResponse DeleteAsync(X request)
-            throws MalformedURLException, IOException
+    public <Y extends BaseModel<?>> WrappedApiResponse<Y> DeleteAsync(Y model, Class<Y> blankModelClass)
+            throws Exception
     {
         var connection = HttpConnectionFactory.CreateSecure(
-                request.setMethod("DELETE").setHostUrl("author/9a70991f-250d-4ee2-b883-d833b0a47b23"),
+                new GenericDeleteRequest<>(model, blankModelClass),
                 this.authenticationContext);
 
         connection.connect();
 
-        var responseCode = connection.getResponseCode();
-        var responseMessage = connection.getResponseMessage();
+        return this.<Y>readWrappedApiResponseOrDie(connection, blankModelClass);
+    }
 
-        System.out.println("Response: " + responseCode + " - " + responseMessage);
+    public <Y extends BaseModel<?>> WrappedApiResponse<Y> PutAsync(Y model, Class<Y> blankModelClass)
+            throws Exception
+    {
+        var connection = HttpConnectionFactory.CreateSecure(
+                new GenericPutRequest<>(model, blankModelClass),
+                this.authenticationContext);
 
-        return new WrappedApiResponse();
+        connection.connect();
+
+        return this.<Y>readWrappedApiResponseOrDie(connection, blankModelClass);
+    }
+
+    public <Y extends BaseModel<?>> WrappedApiResponse<Y> PostAsync(Y model, Class<Y> blankModelClass)
+            throws Exception
+    {
+        var connection = HttpConnectionFactory.CreateSecure(
+                new GenericPostRequest<>(model, blankModelClass),
+                this.authenticationContext);
+
+        connection.connect();
+
+        return this.<Y>readWrappedApiResponseOrDie(connection, blankModelClass);
     }
 }

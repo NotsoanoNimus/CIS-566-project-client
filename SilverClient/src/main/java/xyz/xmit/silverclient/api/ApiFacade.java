@@ -1,7 +1,10 @@
 package xyz.xmit.silverclient.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import xyz.xmit.silverclient.api.request.BaseApiRequest;
 import xyz.xmit.silverclient.api.request.GenericGetRequest;
+import xyz.xmit.silverclient.api.request.GenericPostRequest;
+import xyz.xmit.silverclient.models.BaseModel;
 import xyz.xmit.silverclient.models.HomeScreenData;
 import xyz.xmit.silverclient.utilities.SilverUtilities;
 
@@ -53,6 +56,69 @@ public final class ApiFacade
             ex.printStackTrace();
 
             SilverUtilities.ShowAlert("There was a problem loading data for the dashboard.", "Failed to Fetch", true);
+        }
+
+        return null;
+    }
+
+    public static <TModel extends BaseModel<?>> WrappedApiResponse<TModel> handleApiPost(
+            TModel model,
+            Class<TModel> blankModelClass)
+    {
+        try {
+            var resp = HttpApiClient.getInstance().PostAsync(model, blankModelClass);
+
+            if (resp == null || resp.getData() == null) {
+                throw new Exception("null API response for POST request");
+            }
+
+            return resp;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+            SilverUtilities.ShowAlert("There was a problem contacting the API.", "Failed to Fetch");
+        }
+
+        return null;
+    }
+
+    public static <TModel extends BaseModel<?>> WrappedApiResponse<TModel> handleApiPut(
+            TModel model,
+            Class<TModel> blankModelClass)
+    {
+        try {
+            var resp = HttpApiClient.getInstance().PutAsync(model, blankModelClass);
+
+            if (resp == null || resp.getData() == null) {
+                throw new Exception("null API response for POST request");
+            }
+
+            return resp;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+            SilverUtilities.ShowAlert("There was a problem contacting the API.", "Failed to Fetch");
+        }
+
+        return null;
+    }
+
+    public static <TModel extends BaseModel<?>> WrappedApiResponse<TModel> handleApiDelete(
+            TModel model,
+            Class<TModel> blankModelClass)
+    {
+        try {
+            var resp = HttpApiClient.getInstance().PutAsync(model, blankModelClass);
+
+            if (resp == null || resp.getData() == null) {
+                throw new Exception("null API response for POST request");
+            }
+
+            return resp;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+            SilverUtilities.ShowAlert("There was a problem contacting the API.", "Failed to Fetch");
         }
 
         return null;

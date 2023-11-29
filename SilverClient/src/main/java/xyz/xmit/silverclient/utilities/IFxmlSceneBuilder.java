@@ -63,4 +63,8 @@ public interface IFxmlSceneBuilder
     public boolean isClosesStageOnBuildError();
 
     public IFxmlSceneBuilder setClosesStageOnBuildError(boolean closesStageOnBuildError);
+
+    public IFxmlSceneBuilder setSceneUserData(Object data);
+
+    public Object getSceneUserData();
 }

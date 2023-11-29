@@ -47,6 +47,8 @@ public final class FxmlSceneBuilder
 
     private Scene scene;
 
+    private Object sceneUserData = null;
+
     private boolean closesStageOnBuildError = true;
 
     private boolean undecorated = true;
@@ -234,5 +236,15 @@ public final class FxmlSceneBuilder
         this.closesStageOnBuildError = closesStageOnBuildError;
 
         return this;
+    }
+
+    public IFxmlSceneBuilder setSceneUserData(Object data) {
+        this.sceneUserData = data;
+
+        return this;
+    }
+
+    public Object getSceneUserData() {
+        return this.sceneUserData;
     }
 }

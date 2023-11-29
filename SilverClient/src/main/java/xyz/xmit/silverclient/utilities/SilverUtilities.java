@@ -10,6 +10,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Duration;
+import xyz.xmit.silverclient.observer.SilverPublisher;
 
 public final class SilverUtilities
 {
@@ -32,19 +33,40 @@ public final class SilverUtilities
 
     public static boolean ShowLogoutDialog()
     {
-        var confirmationOfExit = new Alert(
-                Alert.AlertType.CONFIRMATION,
-                "Are you sure you want to exit? Unsaved changes will not be committed.",
-                ButtonType.YES,
-                ButtonType.CANCEL);
+        if (SilverPublisher.getInstance().getSubscribers().size() > 1) {
+            var confirmationOfExit = new Alert(
+                    Alert.AlertType.CONFIRMATION,
+                    "You are about to log out. Would you like to commit your unsaved changes?",
+                    ButtonType.YES,
+                    ButtonType.CANCEL);
 
-        confirmationOfExit.setHeaderText("Log Out");
-        confirmationOfExit.setTitle("Log Out");
-        confirmationOfExit.setResizable(false);
-        confirmationOfExit.showAndWait();
+            confirmationOfExit.setHeaderText("Log Out");
+            confirmationOfExit.setTitle("Log Out");
+            confirmationOfExit.setResizable(false);
+            confirmationOfExit.showAndWait();
 
-        if (confirmationOfExit.getResult() == ButtonType.YES) {
+            if (confirmationOfExit.getResult() == ButtonType.CANCEL) {
+                return true;
+            } else if (confirmationOfExit.getResult() == ButtonType.YES) {
+                SilverPublisher.getInstance().commitAll();
+            }
+
             System.exit(0);
+        } else {
+            var confirmationOfExit = new Alert(
+                    Alert.AlertType.CONFIRMATION,
+                    "Are you sure you want to log out?",
+                    ButtonType.YES,
+                    ButtonType.CANCEL);
+
+            confirmationOfExit.setHeaderText("Log Out");
+            confirmationOfExit.setTitle("Log Out");
+            confirmationOfExit.setResizable(false);
+            confirmationOfExit.showAndWait();
+
+            if (confirmationOfExit.getResult() == ButtonType.YES) {
+                System.exit(0);
+            }
         }
 
         return false;
