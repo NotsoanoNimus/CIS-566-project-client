@@ -4,7 +4,7 @@
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="ALTERNATIVE_JRE_PATH" value="openjdk-21" />
     <envs>
-      <env name="SILVER_TARGET_HOSTNAME" value="silver.xmit.xyz" />
+      <env name="SILVER_TARGET_HOSTNAME" value="localhost" />
     </envs>
     <method v="2">
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="SilverClient [clean,install]" run_configuration_type="MavenRunConfiguration" />

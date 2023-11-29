@@ -1,6 +1,7 @@
 package xyz.xmit.silverclient.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import xyz.xmit.silverclient.api.ApiFacade;
 
 import java.util.Date;
 import java.util.UUID;
@@ -41,5 +42,15 @@ public final class InventoryItemEdition
     @Override
     public String getBaseModelUri() {
         return "item-edition";
+    }
+
+    @Override
+    public void commit()
+    {
+        if (this.isNewModel) {
+            ApiFacade.handleApiPost(this, InventoryItemEdition.class);
+        } else {
+            ApiFacade.handleApiPut(this, InventoryItemEdition.class);
+        }
     }
 }

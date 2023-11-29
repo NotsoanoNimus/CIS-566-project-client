@@ -1,10 +1,11 @@
 package xyz.xmit.silverclient.observer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BasePublisher
 {
-    protected List<BaseSubscriber> subscribers;
+    protected List<BaseSubscriber> subscribers = new ArrayList<>();
 
     public void subscribe(BaseSubscriber subscriber)
     {

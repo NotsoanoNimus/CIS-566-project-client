@@ -1,6 +1,7 @@
 package xyz.xmit.silverclient.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import xyz.xmit.silverclient.api.ApiFacade;
 
 import java.util.Date;
 
@@ -16,15 +17,23 @@ public final class User
     public String email;
 
     @DataField
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     public Date last_login_at;
 
     @DataField
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     public Date last_activity_at;
 
     @Override
     public String getBaseModelUri() {
         return "user";
+    }
+
+    @Override
+    public void commit()
+    {
+        if (this.isNewModel) {
+            ApiFacade.handleApiPost(this, User.class);
+        } else {
+            ApiFacade.handleApiPut(this, User.class);
+        }
     }
 }

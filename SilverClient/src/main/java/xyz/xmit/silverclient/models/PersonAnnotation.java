@@ -1,5 +1,7 @@
 package xyz.xmit.silverclient.models;
 
+import xyz.xmit.silverclient.api.ApiFacade;
+
 import java.util.UUID;
 
 public final class PersonAnnotation
@@ -21,5 +23,15 @@ public final class PersonAnnotation
     @Override
     public String getBaseModelUri() {
         return "person-annotation";
+    }
+
+    @Override
+    public void commit()
+    {
+        if (this.isNewModel) {
+            ApiFacade.handleApiPost(this, PersonAnnotation.class);
+        } else {
+            ApiFacade.handleApiPut(this, PersonAnnotation.class);
+        }
     }
 }

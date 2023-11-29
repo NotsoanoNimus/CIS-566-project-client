@@ -1,6 +1,7 @@
 package xyz.xmit.silverclient.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import xyz.xmit.silverclient.api.ApiFacade;
 
 import java.util.UUID;
 
@@ -21,5 +22,15 @@ public final class Charge
     @Override
     public String getBaseModelUri() {
         return "charge";
+    }
+
+    @Override
+    public void commit()
+    {
+        if (this.isNewModel) {
+            ApiFacade.handleApiPost(this, Charge.class);
+        } else {
+            ApiFacade.handleApiPut(this, Charge.class);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package xyz.xmit.silverclient.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import xyz.xmit.silverclient.api.ApiFacade;
 
 import java.util.Date;
 import java.util.UUID;
@@ -23,5 +24,15 @@ public final class Transaction
     @Override
     public String getBaseModelUri() {
         return "transaction";
+    }
+
+    @Override
+    public void commit()
+    {
+        if (this.isNewModel) {
+            ApiFacade.handleApiPost(this, Transaction.class);
+        } else {
+            ApiFacade.handleApiPut(this, Transaction.class);
+        }
     }
 }

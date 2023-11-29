@@ -7,6 +7,7 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import javafx.util.Pair;
 import xyz.xmit.silverclient.SilverLibraryApplication;
 import xyz.xmit.silverclient.ui.controllers.HookedController;
 import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
@@ -74,9 +75,9 @@ public final class FxmlSceneBuilder
     {
         this.build();
 
-        var loader = (FXMLLoader)this.stage.getScene().getUserData();
+        var loader = (Pair<Object, FXMLLoader>)this.stage.getScene().getUserData();
 
-        HookedController controller = loader.getController();
+        HookedController controller = loader.getValue().getController();
         controller.controllerEntryHook();
 
         if (injectedContext != null) {
@@ -97,7 +98,7 @@ public final class FxmlSceneBuilder
             var primaryWindowScene = new Scene(loader.load());
 
             // Preserve a loader reference to get in case it's needed in an out Build wrapper call.
-            primaryWindowScene.setUserData(loader);
+            primaryWindowScene.setUserData(new Pair<Object, FXMLLoader>(this.sceneUserData, loader));
 
             // Load all relevant stylesheets.
             for (var resourceName : this.stylesheets) {
