@@ -1,6 +1,7 @@
 package xyz.xmit.silverclient.ui.statemachine;
 
 import xyz.xmit.silverclient.models.HomeScreenData;
+import xyz.xmit.silverclient.observer.SilverPublisher;
 import xyz.xmit.silverclient.ui.controllers.PrimaryWindowController;
 
 import java.lang.reflect.Type;
@@ -62,6 +63,11 @@ public final class SilverApplicationContext
 
             ((BaseContainerSilverState)this.currentState).onLoadContainer();
         }
+    }
+
+    private boolean hasUnsavedChanges()
+    {
+        return SilverPublisher.getInstance().hasSubscribers();
     }
 
     public SilverState getCurrentState()

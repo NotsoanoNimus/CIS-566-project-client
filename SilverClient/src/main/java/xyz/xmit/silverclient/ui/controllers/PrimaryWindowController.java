@@ -3,6 +3,7 @@ package xyz.xmit.silverclient.ui.controllers;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
@@ -11,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import xyz.xmit.silverclient.models.HomeScreenData;
 import xyz.xmit.silverclient.models.InventoryItemInstance;
+import xyz.xmit.silverclient.observer.SilverPublisher;
 import xyz.xmit.silverclient.ui.statemachine.PopupSilverState;
 import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
 import xyz.xmit.silverclient.ui.statemachine.SilverStateException;
@@ -21,6 +23,9 @@ public final class PrimaryWindowController
     extends HookedController
 {
     private SilverApplicationContext context;
+
+    @FXML
+    public Group gUnsavedChanges;
 
     @FXML
     public Button homeButton;
@@ -185,6 +190,35 @@ public final class PrimaryWindowController
     public void doManageItems()
     {
         this.context.getCurrentState().onManageItems();
+    }
+
+    @FXML
+    public void doCommit()
+    {
+        SilverPublisher.getInstance().commitAll();
+
+        this.gUnsavedChanges.setVisible(false);
+    }
+
+    @FXML
+    public void doRevert()
+    {
+        var confirmation = new Alert(
+                Alert.AlertType.CONFIRMATION,
+                "Are you sure you want to revert? You will permanently lose all uncommitted changes.",
+                ButtonType.YES,
+                ButtonType.NO);
+
+        confirmation.setTitle("Revert Changes");
+        confirmation.setHeaderText("Revert Changes");
+        confirmation.setResizable(false);
+        confirmation.showAndWait();
+
+        if (confirmation.getResult() == ButtonType.YES) {
+            SilverPublisher.getInstance().unsubscribeAll();
+
+            this.gUnsavedChanges.setVisible(false);
+        }
     }
 
     @FXML

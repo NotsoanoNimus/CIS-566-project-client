@@ -38,6 +38,7 @@ public final class SilverUtilities
                     Alert.AlertType.CONFIRMATION,
                     "You are about to log out. Would you like to commit your unsaved changes?",
                     ButtonType.YES,
+                    ButtonType.NO,
                     ButtonType.CANCEL);
 
             confirmationOfExit.setHeaderText("Log Out");

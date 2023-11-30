@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.control.Label?>
-<AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.xmit.silverclient.ui.controllers.PrimaryWindowController">
+<AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.xmit.silverclient.ui.controllers.PrimaryWindowController">
    <VBox fx:id="mainMenuContainer" layoutY="8.0" prefHeight="596.0" prefWidth="135.0" style="-fx-background-color: #fac489;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
       <ImageView fitHeight="148.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true">
          <Image url="@images/silver_logo.png" />
@@ -103,7 +95,7 @@
          </ScrollPane>
       </children>
    </Pane>
-   <Pane fx:id="manageItemsPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0">
+   <Pane fx:id="manageItemsPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
       <children>
          <SplitPane dividerPositions="0.4605451936872309" layoutX="14.0" layoutY="127.0" prefHeight="551.0" prefWidth="838.0">
             <items>
@@ -140,8 +132,17 @@
       <cursor>
          <Cursor fx:constant="WAIT" />
       </cursor>
-      <TextField fx:id="tfSearchHome" onKeyTyped="#onKeyFilterDashboard" layoutX="20.0" layoutY="24.0" prefHeight="26.0" prefWidth="296.0" promptText="Search Items by title or SKU..." />
-      <Button fx:id="bRefreshHome" onMouseClicked="#doRefresh" layoutX="316.0" layoutY="24.0" mnemonicParsing="false" text="Refresh" />
+      <TextField fx:id="tfSearchHome" layoutX="20.0" layoutY="24.0" onKeyTyped="#onKeyFilterDashboard" prefHeight="26.0" prefWidth="296.0" promptText="Search Items by title or SKU..." />
+      <Button fx:id="bRefreshHome" layoutX="316.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#doRefresh" text="Refresh" />
+      <Group fx:id="gUnsavedChanges" visible="false">
+         <Label layoutX="563.0" layoutY="29.0" text="You have unsaved changes.">
+            <font>
+               <Font name="SansSerif Italic" size="12.0" />
+            </font>
+         </Label>
+         <Button layoutX="721.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#doRevert" prefHeight="25" prefWidth="60" text="Revert" />
+         <Button layoutX="781.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#doCommit" prefHeight="25" prefWidth="60" text="Commit" />
+      </Group>
       <TableView fx:id="tableHome" layoutX="20.0" layoutY="60.0" prefHeight="640.0" prefWidth="820.0">
          <placeholder>
             <Label fx:id="tableHomeLabel" text="Loading..." />

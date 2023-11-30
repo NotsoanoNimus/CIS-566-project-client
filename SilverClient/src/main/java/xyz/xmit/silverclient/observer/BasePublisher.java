@@ -22,6 +22,16 @@ public abstract class BasePublisher
         this.subscribers.forEach(BaseSubscriber::commit);
     }
 
+    public void unsubscribeAll()
+    {
+        this.subscribers.clear();
+    }
+
+    public boolean hasSubscribers()
+    {
+        return !this.subscribers.isEmpty();
+    }
+
     public List<BaseSubscriber> getSubscribers()
     {
         return this.subscribers;
