@@ -1,5 +1,6 @@
 package xyz.xmit.silverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import xyz.xmit.silverclient.api.ApiFacade;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public final class Person
     public int barcode_identifier;
 
     @DataField
-    public UUID user_id;
+    public Integer user_id;
 
     @DataField
     public UUID family_id;
@@ -31,6 +32,15 @@ public final class Person
 
     @DataField(lengthLimit = 255)
     public String last_name;
+
+    @JsonIgnore
+    public String display_name;
+
+    @JsonIgnore
+    public String display_name_full;
+
+    @JsonIgnore
+    public String initials;
 
     @DataField(lengthLimit = 255)
     public String address_line_1;

@@ -10,6 +10,12 @@ public final class Charge
 {
     public Checkout checkout;
 
+    @JsonIgnore
+    public boolean is_paid;
+
+    @JsonIgnore
+    public double amount_paid;
+
     @DataField
     public UUID checkout_id;
 

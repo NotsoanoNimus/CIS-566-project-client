@@ -1,6 +1,7 @@
 package xyz.xmit.silverclient.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import xyz.xmit.silverclient.api.ApiFacade;
 
 import java.util.Date;
@@ -21,6 +22,8 @@ public final class User
 
     @DataField
     public Date last_activity_at;
+
+    public Date email_verified_at;
 
     @Override
     public String getBaseModelUri() {
