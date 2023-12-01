@@ -1,7 +1,5 @@
 package xyz.xmit.silverclient.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import xyz.xmit.silverclient.api.ApiFacade;
 
 import java.util.Date;
@@ -33,10 +31,6 @@ public final class User
     @Override
     public void commit()
     {
-        if (this.isNewModel) {
-            ApiFacade.handleApiPost(this, User.class);
-        } else {
-            ApiFacade.handleApiPut(this, User.class);
-        }
+        ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, User.class, false);
     }
 }

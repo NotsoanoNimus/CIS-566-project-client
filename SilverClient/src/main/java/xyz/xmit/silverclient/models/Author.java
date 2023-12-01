@@ -26,10 +26,6 @@ public final class Author
     @Override
     public void commit()
     {
-        if (this.isNewModel) {
-            ApiFacade.handleApiPost(this, Author.class);
-        } else {
-            ApiFacade.handleApiPut(this, Author.class);
-        }
+        ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, Author.class, false);
     }
 }

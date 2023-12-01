@@ -33,10 +33,6 @@ public final class Charge
     @Override
     public void commit()
     {
-        if (this.isNewModel) {
-            ApiFacade.handleApiPost(this, Charge.class);
-        } else {
-            ApiFacade.handleApiPut(this, Charge.class);
-        }
+        ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, Charge.class, false);
     }
 }

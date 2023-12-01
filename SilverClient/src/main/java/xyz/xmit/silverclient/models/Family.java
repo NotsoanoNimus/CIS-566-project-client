@@ -21,10 +21,6 @@ public final class Family
     @Override
     public void commit()
     {
-        if (this.isNewModel) {
-            ApiFacade.handleApiPost(this, Family.class);
-        } else {
-            ApiFacade.handleApiPut(this, Family.class);
-        }
+        ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, Family.class, false);
     }
 }

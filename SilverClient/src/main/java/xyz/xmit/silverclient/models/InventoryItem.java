@@ -26,10 +26,6 @@ public final class InventoryItem
     @Override
     public void commit()
     {
-        if (this.isNewModel) {
-            ApiFacade.handleApiPost(this, InventoryItem.class);
-        } else {
-            ApiFacade.handleApiPut(this, InventoryItem.class);
-        }
+        ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, InventoryItem.class, false);
     }
 }

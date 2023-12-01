@@ -1,15 +1,33 @@
 package xyz.xmit.silverclient.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import xyz.xmit.silverclient.api.request.BaseApiRequest;
-import xyz.xmit.silverclient.api.request.GenericGetRequest;
-import xyz.xmit.silverclient.api.request.GenericPostRequest;
+import xyz.xmit.silverclient.api.request.*;
 import xyz.xmit.silverclient.models.BaseModel;
 import xyz.xmit.silverclient.models.HomeScreenData;
 import xyz.xmit.silverclient.utilities.SilverUtilities;
 
+/**
+ * DESIGN PATTERN: Facade (Structural)
+ * <br /><br />
+ * This class is designed to hide the complexities of the underlying HttpApiClient class.
+ * It does so by providing wrapped and reusable functionalities which would otherwise be
+ * hugely redundant in code elsewhere within the client project.
+ * <br /><br />
+ * All the underlying "raw" API functions which directly send HTTP requests without error
+ * handling are handled safely in this function. Functions have clear and specific names
+ * which detail what they do, along with thorough method comments.
+ */
 public final class ApiFacade
 {
+    /**
+     * Send a username and password to the remote server to attempt authentication. This completes
+     * the singleton Authentication Context used in the HttpApiClient class and also fails authentication
+     * attempts as gracefully as possible. Special note: an API key is provided in response to a
+     * successful authentication request and set on the global singleton.
+     *
+     * @param username The username to authenticate with.
+     * @param password The password to authenticate with.
+     * @return The API response from the server, containing either a failure or success message.
+     */
     public static WrappedApiResponse<String> login(String username, String password)
     {
         var apiInstance = HttpApiClient.getInstance();
@@ -41,10 +59,16 @@ public final class ApiFacade
         return new WrappedApiResponse<>(true, "Success!");
     }
 
+    /**
+     * Primary request to load the client dashboard data, usually just for the first time. This loads
+     * data for all three tabs into a single HomeScreenData object.
+     *
+     * @return The deserialized JSON blob received from the server when successfully fetching the dashboard.
+     */
     public static WrappedApiResponse<HomeScreenData> loadDashboard()
     {
         try {
-            var resp = HttpApiClient.getInstance().GetAsync(
+            var resp = HttpApiClient.getInstance().RawHttpRequest(
                     new GenericGetRequest<>().setHostUrl("dashboard"), HomeScreenData.class);
 
             if (resp == null || resp.getData() == null) {
@@ -61,33 +85,72 @@ public final class ApiFacade
         return null;
     }
 
-    public static <TModel extends BaseModel<?>> WrappedApiResponse<TModel> handleApiPost(
-            TModel model,
-            Class<TModel> blankModelClass)
+    /**
+     * Send a GET request to the API to retrieve a specific model instance. This method exists to handle API
+     * failures as gracefully as possible without crashing the client application.
+     * @param modelId The ID of the model to fetch.
+     * @param blankModelClass The Class of the model as a direct parameter.
+     * @param showsAlert Whether to show an alert on failure.
+     * @return The API response.
+     * @param <TId> The type of ID to use when fetching the model.
+     * @param <TModel> The model type to fetch.
+     */
+    public static <TId, TModel extends BaseModel<TId>> WrappedApiResponse<TModel> safeApiGet(
+            TId modelId,
+            Class<TModel> blankModelClass,
+            boolean showsAlert)
     {
         try {
-            var resp = HttpApiClient.getInstance().PostAsync(model, blankModelClass);
+            var resp = HttpApiClient.getInstance().RawGetRequest(modelId, blankModelClass);
 
             if (resp == null || resp.getData() == null) {
-                throw new Exception("null API response for POST request");
+                throw new Exception("null API response for dashboard");
             }
 
             return resp;
         } catch (Exception ex) {
             ex.printStackTrace();
 
-            SilverUtilities.ShowAlert("There was a problem contacting the API.", "Failed to Fetch");
+            if (showsAlert) {
+                SilverUtilities.ShowAlert("There was a problem loading the requested entity.", "Failed to Fetch");
+            }
         }
 
         return null;
     }
 
-    public static <TModel extends BaseModel<?>> WrappedApiResponse<TModel> handleApiPut(
+    /**
+     * Send a request to the API for a particular model type. This method exists to handle API
+     * failures as gracefully as possible without crashing the client application.
+     * @param method The HTTP method to use for the request (POST, PUT, or DELETE only).
+     * @param model The model to use.
+     * @param blankModelClass The Class of the model as a direct parameter.
+     * @param showsAlert Whether to show an alert on failure.
+     * @return The API response.
+     * @param <TModel> The model type to use.
+     */
+    public static <TModel extends BaseModel<?>> WrappedApiResponse<TModel> safeApiRequest(
+            String method,
             TModel model,
-            Class<TModel> blankModelClass)
+            Class<TModel> blankModelClass,
+            boolean showsAlert)
     {
         try {
-            var resp = HttpApiClient.getInstance().PutAsync(model, blankModelClass);
+            WrappedApiResponse<TModel> resp;
+
+            switch (method) {
+                case "POST":
+                    resp = HttpApiClient.getInstance().RawPostRequest(model, blankModelClass);
+                    break;
+                case "PUT":
+                    resp = HttpApiClient.getInstance().RawPutRequest(model, blankModelClass);
+                    break;
+                case "DELETE":
+                    resp = HttpApiClient.getInstance().RawDeleteRequest(model, blankModelClass);
+                    break;
+                default:
+                    return null;
+            }
 
             if (resp == null || resp.getData() == null) {
                 throw new Exception("null API response for POST request");
@@ -97,28 +160,9 @@ public final class ApiFacade
         } catch (Exception ex) {
             ex.printStackTrace();
 
-            SilverUtilities.ShowAlert("There was a problem contacting the API.", "Failed to Fetch");
-        }
-
-        return null;
-    }
-
-    public static <TModel extends BaseModel<?>> WrappedApiResponse<TModel> handleApiDelete(
-            TModel model,
-            Class<TModel> blankModelClass)
-    {
-        try {
-            var resp = HttpApiClient.getInstance().PutAsync(model, blankModelClass);
-
-            if (resp == null || resp.getData() == null) {
-                throw new Exception("null API response for POST request");
+            if (showsAlert) {
+                SilverUtilities.ShowAlert("There was a problem contacting the API.", "Failed to Fetch");
             }
-
-            return resp;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-
-            SilverUtilities.ShowAlert("There was a problem contacting the API.", "Failed to Fetch");
         }
 
         return null;

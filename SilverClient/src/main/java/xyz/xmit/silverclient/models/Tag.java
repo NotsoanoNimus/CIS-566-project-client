@@ -23,10 +23,6 @@ public final class Tag
     @Override
     public void commit()
     {
-        if (this.isNewModel) {
-            ApiFacade.handleApiPost(this, Tag.class);
-        } else {
-            ApiFacade.handleApiPut(this, Tag.class);
-        }
+        ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, Tag.class, false);
     }
 }

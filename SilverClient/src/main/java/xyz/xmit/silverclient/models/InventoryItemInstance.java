@@ -1,6 +1,5 @@
 package xyz.xmit.silverclient.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import xyz.xmit.silverclient.api.ApiFacade;
 
 import java.util.Date;
@@ -23,7 +22,6 @@ public final class InventoryItemInstance
     public String item_description;
 
     @DataField
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     public Date acquired_at;
 
     @DataField(lengthLimit = 255)
@@ -73,10 +71,6 @@ public final class InventoryItemInstance
     @Override
     public void commit()
     {
-        if (this.isNewModel) {
-            ApiFacade.handleApiPost(this, InventoryItemInstance.class);
-        } else {
-            ApiFacade.handleApiPut(this, InventoryItemInstance.class);
-        }
+        ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, InventoryItemInstance.class, false);
     }
 }

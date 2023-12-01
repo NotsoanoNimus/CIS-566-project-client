@@ -71,10 +71,6 @@ public final class Person
     @Override
     public void commit()
     {
-        if (this.isNewModel) {
-            ApiFacade.handleApiPost(this, Person.class);
-        } else {
-            ApiFacade.handleApiPut(this, Person.class);
-        }
+        ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, Person.class, false);
     }
 }

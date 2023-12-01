@@ -28,10 +28,6 @@ public final class PersonAnnotation
     @Override
     public void commit()
     {
-        if (this.isNewModel) {
-            ApiFacade.handleApiPost(this, PersonAnnotation.class);
-        } else {
-            ApiFacade.handleApiPut(this, PersonAnnotation.class);
-        }
+        ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, PersonAnnotation.class, false);
     }
 }

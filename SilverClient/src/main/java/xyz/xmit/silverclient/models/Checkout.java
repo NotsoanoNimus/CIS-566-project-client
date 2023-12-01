@@ -1,6 +1,5 @@
 package xyz.xmit.silverclient.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import xyz.xmit.silverclient.api.ApiFacade;
 
 import java.util.Date;
@@ -20,15 +19,12 @@ public final class Checkout
     public UUID inventory_item_instance_id;
 
     @DataField
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     public Date checked_out_at;
 
     @DataField
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     public Date due_at;
 
     @DataField
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     public Date returned_at;
 
     @DataField
@@ -45,10 +41,6 @@ public final class Checkout
     @Override
     public void commit()
     {
-        if (this.isNewModel) {
-            ApiFacade.handleApiPost(this, Checkout.class);
-        } else {
-            ApiFacade.handleApiPut(this, Checkout.class);
-        }
+        ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, Checkout.class, false);
     }
 }

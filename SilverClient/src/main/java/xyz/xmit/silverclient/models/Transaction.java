@@ -29,10 +29,6 @@ public final class Transaction
     @Override
     public void commit()
     {
-        if (this.isNewModel) {
-            ApiFacade.handleApiPost(this, Transaction.class);
-        } else {
-            ApiFacade.handleApiPut(this, Transaction.class);
-        }
+        ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, Transaction.class, false);
     }
 }

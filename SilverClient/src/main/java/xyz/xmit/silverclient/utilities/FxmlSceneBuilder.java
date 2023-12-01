@@ -15,18 +15,7 @@ import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
 import java.io.IOException;
 
 /**
- * DESIGN PATTERN: Builder (Creational)
- * This class makes use of the Builder design pattern to manufacture clean UIs
- * (scenes with stages and stage settings), without having to ceremoniously dance
- * around using some crazy-complex constructor overloads like:
- *
- * <pre>
- *     public FxmlSceneBuilder(String resource, String[] stylesheets, boolean isLocked) { ... }
- *     public FxmlSceneBuilder(String resource, String[] stylesheets) { ... }
- * </pre>
- *
- * Instead, the method-chaining on the setter methods makes for clean usages of this class
- * in varying situations, as well as fluent (human-readable) constructions of new UI components.
+ * See parent interface for pattern information.
  */
 public final class FxmlSceneBuilder
     implements IFxmlSceneBuilder

@@ -8,7 +8,7 @@ import xyz.xmit.silverclient.ui.controllers.PrimaryWindowController;
 import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
 
 /**
- * DESIGN PATTERN: Builder, but also a kind of Factory.
+ * DESIGN PATTERN: Builder/Factory (Creational)
  * <br /><br />
  * Here we compose FxmlSceneBuilder types to construct and show different form components and
  * GUI windows. This is called a 'Director' in the class name to distinguish it as using the
@@ -20,6 +20,9 @@ import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
  */
 public final class SceneDirector
 {
+    /**
+     * Build and display the initial authentication window.
+     */
     public static void constructLoginWindow(Stage stageReference)
     {
         new FxmlSceneBuilder("authentication-window.fxml", stageReference)
@@ -32,6 +35,9 @@ public final class SceneDirector
                 .build();
     }
 
+    /**
+     * Build and display the main dashboard window.
+     */
     public static void constructPrimaryWindow(Stage stageReference)
     {
         new FxmlSceneBuilder("primary-window.fxml", stageReference)
@@ -43,6 +49,9 @@ public final class SceneDirector
                 .buildWithBaseControllerAction(PrimaryWindowController.class);
     }
 
+    /**
+     * Use an application to build and display a pop-up window for editing Item Instance details.
+     */
     public static HookedController constructItemInstancePopupWindow(
             InventoryItemInstance instance,
             SilverApplicationContext context)
