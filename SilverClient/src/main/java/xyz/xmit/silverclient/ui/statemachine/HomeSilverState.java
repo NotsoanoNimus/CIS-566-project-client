@@ -3,7 +3,6 @@ package xyz.xmit.silverclient.ui.statemachine;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import xyz.xmit.silverclient.api.ApiFacade;
-import xyz.xmit.silverclient.models.HomeScreenData;
 
 public final class HomeSilverState
     extends BaseContainerSilverState
@@ -37,6 +36,7 @@ public final class HomeSilverState
         this.onLoadContainer();
 
         this.getParentContext().getController().tfSearchHome.setText(null);
+        this.getParentContext().getController().onKeyFilterDashboard(null);
     }
 
     @Override
