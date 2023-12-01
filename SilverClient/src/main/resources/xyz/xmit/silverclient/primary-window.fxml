@@ -74,53 +74,43 @@
       </Button>
    </VBox>
    <Pane fx:id="manageUsersPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
-      <children>
-         <TextField fx:id="tfSearchManageUsers" layoutX="20.0" layoutY="24.0" prefHeight="24.0" prefWidth="296.0" promptText="Search people by name, email, or identifier" />
-         <Button fx:id="bSearchManageUsers" layoutX="316.0" layoutY="24.0" prefHeight="24.0" mnemonicParsing="false" text="Search" />
-         <Button layoutX="740.0" layoutY="24.0" prefWidth="100.0" prefHeight="24.0" mnemonicParsing="false" text="New User" />
-         <Button layoutX="20.0" layoutY="54.0" prefWidth="100.0" prefHeight="24.0" mnemonicParsing="false" text="Checkouts" disable="true" />
-         <Button layoutX="125.0" layoutY="54.0" prefWidth="100.0" prefHeight="24.0" mnemonicParsing="false" text="Reset Password" disable="true" />
-         <Button layoutX="230.0" layoutY="54.0" prefWidth="100.0" prefHeight="24.0" mnemonicParsing="false" text="Ban User" disable="true" />
-         <TableView layoutX="20.0" layoutY="84.0" prefHeight="616.0" prefWidth="820.0">
-            <columns>
-               <TableColumn prefWidth="180" text="Name" />
-               <TableColumn prefWidth="200" text="Email" />
-               <TableColumn prefWidth="100" text="Identifier" />
-               <TableColumn prefWidth="220" text="Location" />
-               <TableColumn prefWidth="100" text="Status" />
-            </columns>
-         </TableView>
-      </children>
+      <TextField fx:id="tfSearchManageUsers" layoutX="20.0" layoutY="24.0" onKeyTyped="#onKeyFilterUsers" prefHeight="24.0" prefWidth="296.0" promptText="Search people by name, email, or ID..." />
+      <Button layoutX="316.0" layoutY="24.0" prefHeight="24.0" mnemonicParsing="false" onMouseClicked="#doRefresh" text="Refresh" />
+      <Button layoutX="740.0" layoutY="24.0" prefWidth="100.0" prefHeight="24.0" mnemonicParsing="false" text="New User" />
+      <Button layoutX="20.0" layoutY="54.0" prefWidth="100.0" prefHeight="24.0" mnemonicParsing="false" text="Checkouts" disable="true" />
+      <Button layoutX="125.0" layoutY="54.0" prefWidth="100.0" prefHeight="24.0" mnemonicParsing="false" text="Reset Password" disable="true" />
+      <Button layoutX="230.0" layoutY="54.0" prefWidth="100.0" prefHeight="24.0" mnemonicParsing="false" text="Ban User" disable="true" />
+      <TableView fx:id="tablePeople" layoutX="20.0" layoutY="84.0" prefHeight="613.0" prefWidth="820.0">
+         <columns>
+            <TableColumn prefWidth="180" text="Name" />
+            <TableColumn prefWidth="200" text="Email" />
+            <TableColumn prefWidth="100" text="Identifier" />
+            <TableColumn prefWidth="220" text="Location" />
+            <TableColumn prefWidth="100" text="Status" />
+         </columns>
+      </TableView>
    </Pane>
    <Pane fx:id="manageItemsPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
-      <SplitPane dividerPositions="0.4605451936872309" layoutX="14.0" layoutY="127.0" prefHeight="551.0" prefWidth="838.0">
-         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-            <ScrollPane prefHeight="550.0" prefWidth="382.0">
-               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="553.0" prefWidth="381.0">
-                  <TableView prefHeight="536.0" prefWidth="369.0">
-                     <columns>
-                        <TableColumn prefWidth="204.80005794763565" text="Title" />
-                        <TableColumn prefWidth="145.59994506835938" text="Author" />
-                     </columns>
-                  </TableView>
-               </AnchorPane>
-            </ScrollPane>
-         </AnchorPane>
-         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+      <TextField fx:id="tfSearchTitles" layoutX="20.0" layoutY="24.0" onKeyTyped="#onKeyFilterTitles" prefHeight="26.0" prefWidth="296.0" promptText="Search titles by name or author..." />
+      <Button layoutX="316.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#doRefresh" text="Refresh" />
+      <Button layoutX="635.0" layoutY="24.0" prefWidth="100.0" prefHeight="24.0" mnemonicParsing="false" text="New Author" />
+      <Button layoutX="740.0" layoutY="24.0" prefWidth="100.0" prefHeight="24.0" mnemonicParsing="false" text="New Title" />
+      <SplitPane dividerPositions="0.475" layoutX="20.0" layoutY="60.0" prefHeight="637.0" prefWidth="820.0">
+         <TableView fx:id="tableItems" prefWidth="350.0">
+            <columns>
+               <TableColumn prefWidth="200" text="Title" />
+               <TableColumn prefWidth="150" text="Author(s)" />
+            </columns>
+         </TableView>
+         <AnchorPane fx:id="apSelectedTitle" minHeight="100.0" minWidth="0.0" />
       </SplitPane>
-      <TextField fx:id="tfSearchHome11" layoutX="107.0" layoutY="25.0" prefHeight="26.0" prefWidth="296.0" promptText="Search Titles or Author" />
-      <Button fx:id="bSearchHome11" layoutX="433.0" layoutY="26.0" mnemonicParsing="false" text="Search" />
-      <Button layoutX="339.0" layoutY="71.0" mnemonicParsing="false" text="Add Title" />
-      <Button layoutX="442.0" layoutY="71.0" mnemonicParsing="false" text="Remove Title" />
-      <Button layoutX="484.0" layoutY="698.0" mnemonicParsing="false" text="Edition" />
-      <Button layoutX="573.0" layoutY="697.0" mnemonicParsing="false" text="Instances" />
    </Pane>
    <Pane fx:id="homePane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0">
       <cursor>
          <Cursor fx:constant="WAIT" />
       </cursor>
       <TextField fx:id="tfSearchHome" layoutX="20.0" layoutY="24.0" onKeyTyped="#onKeyFilterDashboard" prefHeight="26.0" prefWidth="296.0" promptText="Search Items by title or SKU..." />
-      <Button fx:id="bRefreshHome" layoutX="316.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#doRefresh" text="Refresh" />
+      <Button layoutX="316.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#doRefresh" text="Refresh" />
       <Group fx:id="gUnsavedChanges" visible="false">
          <Label layoutX="563.0" layoutY="29.0" text="You have unsaved changes.">
             <font>
@@ -130,7 +120,7 @@
          <Button layoutX="721.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#doRevert" prefHeight="25" prefWidth="60" text="Revert" />
          <Button layoutX="781.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#doCommit" prefHeight="25" prefWidth="60" text="Commit" />
       </Group>
-      <TableView fx:id="tableHome" layoutX="20.0" layoutY="60.0" prefHeight="640.0" prefWidth="820.0">
+      <TableView fx:id="tableHome" layoutX="20.0" layoutY="60.0" prefHeight="637.0" prefWidth="820.0">
          <placeholder>
             <Label fx:id="tableHomeLabel" text="Loading..." />
          </placeholder>
