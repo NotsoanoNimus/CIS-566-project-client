@@ -28,4 +28,9 @@ public final class InventoryItem
     {
         ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, InventoryItem.class, false);
     }
+
+    public String getTitle()
+    {
+        return this.title;
+    }
 }
