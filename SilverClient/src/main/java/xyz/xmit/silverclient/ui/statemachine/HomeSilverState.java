@@ -4,7 +4,6 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import xyz.xmit.silverclient.api.ApiFacade;
 import xyz.xmit.silverclient.api.response.InstancesList;
-import xyz.xmit.silverclient.models.InventoryItemInstance;
 
 public final class HomeSilverState
     extends BaseContainerSilverState
