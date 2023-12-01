@@ -39,6 +39,8 @@ public abstract class BasePublisher
     public void commitAll()
     {
         this.subscribers.forEach(BaseSubscriber::commit);
+
+        this.subscribers.clear();
     }
 
     /**
