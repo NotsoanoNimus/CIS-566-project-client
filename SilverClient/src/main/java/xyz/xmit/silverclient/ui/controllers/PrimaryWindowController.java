@@ -21,6 +21,9 @@ import xyz.xmit.silverclient.ui.statemachine.SilverStateException;
 import xyz.xmit.silverclient.utilities.SceneDirector;
 import xyz.xmit.silverclient.utilities.SilverUtilities;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public final class PrimaryWindowController
     extends HookedController
 {
@@ -169,9 +172,9 @@ public final class PrimaryWindowController
     {
         if (dashboardData == null) return;
 
-        this.tableHome.getItems().setAll(dashboardData.instances);
-        this.tablePeople.getItems().setAll(dashboardData.people);
-        this.tableItems.getItems().setAll(dashboardData.titles);
+        if (this.tableHome.getItems() != null) this.tableHome.getItems().setAll(dashboardData.instances);
+        if (this.tablePeople.getItems() != null) this.tablePeople.getItems().setAll(dashboardData.people);
+        if (this.tableItems.getItems() != null) this.tableItems.getItems().setAll(dashboardData.titles);
     }
 
     /**
@@ -195,7 +198,7 @@ public final class PrimaryWindowController
             var filteredSet = this.context.getDashboardData().instances.stream().filter(
                     i -> String.valueOf(i.barcode_sku).contains(String.valueOf(parsedSku))).toList();
 
-            var newData = this.context.getDashboardData();
+            var newData = this.context.getDashboardData().createNewFromThis();
             newData.instances = filteredSet;
 
             this.context.setDashboardDataFiltered(newData);
@@ -205,7 +208,7 @@ public final class PrimaryWindowController
                 var filteredSet = this.context.getDashboardData().instances.stream().filter(
                         i -> i.getTitle().trim().toLowerCase().contains(this.tfSearchHome.getText().trim().toLowerCase())).toList();
 
-                var newData = this.context.getDashboardData();
+                var newData = this.context.getDashboardData().createNewFromThis();
                 newData.instances = filteredSet;
 
                 this.context.setDashboardDataFiltered(newData);
@@ -236,7 +239,7 @@ public final class PrimaryWindowController
                     )
                     .toList();
 
-            var newData = this.context.getDashboardData();
+            var newData = this.context.getDashboardData().createNewFromThis();
             newData.people = filteredSet;
 
             this.context.setDashboardDataFiltered(newData);
@@ -252,7 +255,7 @@ public final class PrimaryWindowController
                         )
                         .toList();
 
-                var newData = this.context.getDashboardData();
+                var newData = this.context.getDashboardData().createNewFromThis();
                 newData.people = filteredSet;
 
                 this.context.setDashboardDataFiltered(newData);
@@ -284,7 +287,7 @@ public final class PrimaryWindowController
                     )
                     .toList();
 
-            var newData = this.context.getDashboardData();
+            var newData = this.context.getDashboardData().createNewFromThis();
             newData.titles = filteredSet;
 
             this.context.setDashboardDataFiltered(newData);
@@ -311,8 +314,8 @@ public final class PrimaryWindowController
         SilverUtilities.GetTableColumnByName(this.tableHome, "Condition")
                 .setCellValueFactory(new PropertyValueFactory<>("condition"));
 
-        SilverUtilities.GetTableColumnByName(this.tableHome, "Acquired At")
-                .setCellValueFactory(new PropertyValueFactory<>("acquiredAt"));
+        ((TableColumn<InventoryItemInstance, String>)SilverUtilities.GetTableColumnByName(this.tableHome, "Acquired At"))
+                .setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().acquired_at.toString()));
 
         this.tableHome.setRowFactory(tv -> {
             var row = new TableRow<InventoryItemInstance>();

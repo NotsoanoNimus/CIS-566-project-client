@@ -3,6 +3,8 @@ package xyz.xmit.silverclient.ui.statemachine;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import xyz.xmit.silverclient.api.ApiFacade;
+import xyz.xmit.silverclient.api.response.InstancesList;
+import xyz.xmit.silverclient.models.InventoryItemInstance;
 
 public final class HomeSilverState
     extends BaseContainerSilverState
@@ -33,15 +35,19 @@ public final class HomeSilverState
     @Override
     public void onRefreshData()
     {
-        this.onLoadContainer();
+        var instances = ApiFacade.fetchModelList("dashboard?specific=instances", InstancesList.class);
 
-        this.getParentContext().getController().tfSearchHome.setText(null);
+        assert instances != null;
+        this.getParentContext().setInstances(instances.getData().instances);
+
+        this.getParentContext().getController().tfSearchHome.setText("");
         this.getParentContext().getController().onKeyFilterDashboard(null);
     }
 
     @Override
     public void onHome()
     {
+        // Do nothing: we're already in the Home state.
     }
 
     @Override

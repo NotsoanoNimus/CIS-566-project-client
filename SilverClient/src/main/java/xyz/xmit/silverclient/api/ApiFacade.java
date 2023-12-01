@@ -5,6 +5,9 @@ import xyz.xmit.silverclient.models.BaseModel;
 import xyz.xmit.silverclient.models.HomeScreenData;
 import xyz.xmit.silverclient.utilities.SilverUtilities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * DESIGN PATTERN: Facade (Structural)
  * <br /><br />
@@ -80,6 +83,60 @@ public final class ApiFacade
             ex.printStackTrace();
 
             SilverUtilities.ShowAlert("There was a problem loading data for the dashboard.", "Failed to Fetch", true);
+        }
+
+        return null;
+    }
+
+    /**
+     * Runs a GET HTTP request against a specified API URI and expects a list of models in return.
+     *
+     * @param endpoint The host URI to use for fetching the list of models.
+     * @return A list of models from the specified API endpoint.
+     * @param <TModel> The entity type to return. Must be a Model class.
+     */
+//    @SuppressWarnings("unchecked")
+//    public static <TModel> List<TModel> fetchModelList(String endpoint)
+//    {
+//        try {
+//            var resp = HttpApiClient.getInstance().RawHttpRequest(
+//                    new GenericGetRequest<>().setHostUrl(endpoint), List.class);
+//
+//            if (resp == null || resp.getData() == null) {
+//                throw new Exception("null API response for dashboard");
+//            }
+//
+//            List<TModel> retList = new ArrayList<>();
+//
+//            for (var i : resp.getData()) {
+//                retList.add((TModel)i);
+//            }
+//
+//            return retList;
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//
+//            SilverUtilities.ShowAlert("There was a problem loading data for the dashboard.", "Failed to Fetch", true);
+//        }
+//
+//        return null;
+//    }
+
+    public static <TModel> WrappedApiResponse<TModel> fetchModelList(String endpoint, Class<TModel> modelClass)
+    {
+        try {
+            var resp = HttpApiClient.getInstance().RawHttpRequest(
+                    new GenericGetRequest<>().setHostUrl(endpoint), modelClass);
+
+            if (resp == null || resp.getData() == null) {
+                throw new Exception("null API response for model listing");
+            }
+
+            return resp;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+            SilverUtilities.ShowAlert("There was a problem loading data.", "Failed to Fetch");
         }
 
         return null;
