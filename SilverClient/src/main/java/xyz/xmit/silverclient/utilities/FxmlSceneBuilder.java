@@ -2,8 +2,7 @@ package xyz.xmit.silverclient.utilities;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
@@ -101,6 +100,14 @@ public final class FxmlSceneBuilder
                     this.stage.initStyle(StageStyle.UNDECORATED);
                 } else if (!this.undecorated && this.stage.getStyle() != StageStyle.DECORATED) {
                     this.stage.initStyle(StageStyle.DECORATED);
+                }
+            }
+
+            // Add default Silver icon to the stage.
+            if (this.stage.getIcons().isEmpty()) {
+                var image = SilverLibraryApplication.class.getResourceAsStream("images/silver_logo.png");
+                if (image != null) {
+                    this.stage.getIcons().add(new Image(image));
                 }
             }
 
