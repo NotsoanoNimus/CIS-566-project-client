@@ -17,6 +17,7 @@ import xyz.xmit.silverclient.ui.statemachine.PopupSilverState;
 import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
 import xyz.xmit.silverclient.ui.statemachine.SilverStateException;
 import xyz.xmit.silverclient.utilities.FxmlSceneBuilder;
+import xyz.xmit.silverclient.utilities.SceneDirector;
 import xyz.xmit.silverclient.utilities.SilverUtilities;
 
 public final class PrimaryWindowController
@@ -94,13 +95,7 @@ public final class PrimaryWindowController
                 }
 
                 // Spawn a popup window and enter a pop-up state.
-                var hookController = new FxmlSceneBuilder("item-instance-detail.fxml", new Stage())
-                        .setWidth(800)
-                        .setHeight(600)
-                        .setTitle("Item Instance | #" + row.getItem().barcode_sku + " | " + row.getItem().getTitle())
-                        .setResizeable(false)
-                        .setUndecorated(true)
-                        .buildWithBaseControllerAction(ItemInstanceDetailController.class, this.context);
+                var hookController = SceneDirector.constructItemInstancePopupWindow(row.getItem(), this.context);
 
                 ((ItemInstanceDetailController)hookController).setInventoryItemInstance(row.getItem());
 
