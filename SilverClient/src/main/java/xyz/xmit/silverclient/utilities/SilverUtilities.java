@@ -31,41 +31,39 @@ public final class SilverUtilities
         timer.play();
     }
 
+    public static ButtonType ShowAlertYesNoConfirmation(String message, String header)
+    {
+        var confirmationOfExit = new Alert(
+                Alert.AlertType.CONFIRMATION,
+                message,
+                ButtonType.YES,
+                ButtonType.NO,
+                ButtonType.CANCEL);
+
+        confirmationOfExit.setHeaderText(header);
+        confirmationOfExit.setTitle(header);
+        confirmationOfExit.setResizable(false);
+        confirmationOfExit.showAndWait();
+
+        return confirmationOfExit.getResult();
+    }
+
     public static boolean ShowLogoutDialog()
     {
         if (SilverPublisher.getInstance().getSubscribers().size() > 1) {
-            var confirmationOfExit = new Alert(
-                    Alert.AlertType.CONFIRMATION,
-                    "You are about to log out. Would you like to commit your unsaved changes?",
-                    ButtonType.YES,
-                    ButtonType.NO,
-                    ButtonType.CANCEL);
+            var res = ShowAlertYesNoConfirmation("You are about to log out. Would you like to commit your unsaved changes?", "Log Out");
 
-            confirmationOfExit.setHeaderText("Log Out");
-            confirmationOfExit.setTitle("Log Out");
-            confirmationOfExit.setResizable(false);
-            confirmationOfExit.showAndWait();
-
-            if (confirmationOfExit.getResult() == ButtonType.CANCEL) {
+            if (res == ButtonType.CANCEL) {
                 return true;
-            } else if (confirmationOfExit.getResult() == ButtonType.YES) {
+            } else if (res == ButtonType.YES) {
                 SilverPublisher.getInstance().commitAll();
             }
 
             System.exit(0);
         } else {
-            var confirmationOfExit = new Alert(
-                    Alert.AlertType.CONFIRMATION,
-                    "Are you sure you want to log out?",
-                    ButtonType.YES,
-                    ButtonType.CANCEL);
+            var res = ShowAlertYesNoConfirmation("Are you sure you want to log out?", "Log Out");
 
-            confirmationOfExit.setHeaderText("Log Out");
-            confirmationOfExit.setTitle("Log Out");
-            confirmationOfExit.setResizable(false);
-            confirmationOfExit.showAndWait();
-
-            if (confirmationOfExit.getResult() == ButtonType.YES) {
+            if (res == ButtonType.YES) {
                 System.exit(0);
             }
         }
