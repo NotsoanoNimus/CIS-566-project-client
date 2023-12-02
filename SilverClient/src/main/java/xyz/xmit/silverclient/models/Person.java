@@ -74,5 +74,42 @@ public final class Person
         ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, Person.class, false);
     }
 
+    public boolean isUserBanned()
+    {
+        return this.deleted_at != null || this.user.deleted_at != null;
+    }
 
+    public String getDisplayName()
+    {
+        return this.first_name + " " + (this.middle_names != null ? (this.middle_names + " ") : "") + this.last_name;
+    }
+
+    public String getEmail()
+    {
+        return this.user.email;
+    }
+
+    public String getIdentifier()
+    {
+        return String.valueOf(this.barcode_identifier);
+    }
+
+    public String getLocation()
+    {
+        return this.city + ", " + this.state + " - " + this.country;
+    }
+
+    public String getStatus()
+    {
+        return this.isUserBanned() ? "Banned"
+                : (
+                        this.user.is_staff
+                                ? "Staff"
+                                : (
+                                        this.user.last_activity_at != null
+                                                ? "Active"
+                                                : "Dormant"
+                        )
+        );
+    }
 }

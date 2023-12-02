@@ -2,6 +2,7 @@ package xyz.xmit.silverclient.utilities;
 
 import javafx.stage.Stage;
 import xyz.xmit.silverclient.models.InventoryItemInstance;
+import xyz.xmit.silverclient.models.Person;
 import xyz.xmit.silverclient.ui.controllers.HookedController;
 import xyz.xmit.silverclient.ui.controllers.ItemInstanceDetailController;
 import xyz.xmit.silverclient.ui.controllers.PrimaryWindowController;
@@ -60,6 +61,20 @@ public final class SceneDirector
                 .setWidth(800)
                 .setHeight(600)
                 .setTitle("Item Instance | #" + instance.barcode_sku + " | " + instance.getTitle())
+                .setResizeable(false)
+                .setUndecorated(true)
+                .buildWithBaseControllerAction(ItemInstanceDetailController.class, context);
+    }
+
+    /**
+     * Use an application to build and display a pop-up window for editing Item Instance details.
+     */
+    public static HookedController constructPersonPopupWindow(Person instance, SilverApplicationContext context)
+    {
+        return new FxmlSceneBuilder("person-detail.fxml", new Stage())
+                .setWidth(800)
+                .setHeight(600)
+                .setTitle("Person | " + instance.getDisplayName() + " | " + instance.getIdentifier())
                 .setResizeable(false)
                 .setUndecorated(true)
                 .buildWithBaseControllerAction(ItemInstanceDetailController.class, context);

@@ -344,6 +344,48 @@ public final class PrimaryWindowController
         // ======================
         // MANAGE USERS TABLE
         // ======================
+        SilverUtilities.GetTableColumnByName(this.tablePeople, "Name")
+                .setCellValueFactory(new PropertyValueFactory<>("displayName"));
+
+        SilverUtilities.GetTableColumnByName(this.tablePeople, "Email")
+                .setCellValueFactory(new PropertyValueFactory<>("email"));
+
+        SilverUtilities.GetTableColumnByName(this.tablePeople, "Identifier")
+                .setCellValueFactory(new PropertyValueFactory<>("identifier"));
+
+        SilverUtilities.GetTableColumnByName(this.tablePeople, "Location")
+                .setCellValueFactory(new PropertyValueFactory<>("location"));
+
+        SilverUtilities.GetTableColumnByName(this.tablePeople, "Status")
+                .setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        this.tablePeople.setRowFactory(tv -> {
+            var row = new TableRow<Person>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() != 2 || row.isEmpty()) return;
+
+                // Deny multiple pop-up states. Only one pop-up should be available at a time.
+                if (this.context.getCurrentState() instanceof PopupSilverState)
+                {
+                    return;
+                }
+
+                // Spawn a popup window and enter a pop-up state.
+                var hookController = SceneDirector.constructPersonPopupWindow(row.getItem(), this.context);
+
+                ((PersonDetailController)hookController).setPersonInstance(row.getItem());
+
+                var previousState = this.context.getCurrentState().getClass();
+                this.context.setCurrentState(PopupSilverState.class);
+                ((PopupSilverState)this.context.getCurrentState()).setPreviousStateClass(previousState);
+            });
+
+            return row;
+        });
+
+        // ======================
+        // MANAGE TITLES TABLE
+        // ======================
         SilverUtilities.GetTableColumnByName(this.tableItems, "Title")
                 .setCellValueFactory(new PropertyValueFactory<>("title"));
 
@@ -357,6 +399,8 @@ public final class PrimaryWindowController
         this.tableItems.setRowFactory(tv -> {
             var row = new TableRow<InventoryItem>();
             row.setOnMouseClicked(event -> {
+                if (row.isEmpty()) return;
+
                 // Display the details of the row in the right-side panel.
             });
 
