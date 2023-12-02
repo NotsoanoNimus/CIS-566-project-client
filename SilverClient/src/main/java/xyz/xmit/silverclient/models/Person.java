@@ -2,6 +2,7 @@ package xyz.xmit.silverclient.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import xyz.xmit.silverclient.api.ApiFacade;
+import xyz.xmit.silverclient.api.HttpApiClient;
 
 import java.util.List;
 import java.util.UUID;
@@ -79,6 +80,16 @@ public final class Person
         return this.deleted_at != null || this.user.deleted_at != null;
     }
 
+    public boolean isUserStaff()
+    {
+        return this.user.is_staff;
+    }
+
+    public boolean isUserSelf()
+    {
+        return this.user.email.equalsIgnoreCase(HttpApiClient.getInstance().getAuthenticationContext().getUsername());
+    }
+
     public String getDisplayName()
     {
         return this.first_name + " " + (this.middle_names != null ? (this.middle_names + " ") : "") + this.last_name;
@@ -101,7 +112,8 @@ public final class Person
 
     public String getStatus()
     {
-        return this.isUserBanned() ? "Banned"
+        return this.isUserBanned()
+                ? "Banned"
                 : (
                         this.user.is_staff
                                 ? "Staff"

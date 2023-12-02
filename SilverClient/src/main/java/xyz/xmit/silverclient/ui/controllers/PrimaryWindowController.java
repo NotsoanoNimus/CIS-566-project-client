@@ -1,6 +1,7 @@
 package xyz.xmit.silverclient.ui.controllers;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
@@ -22,6 +23,7 @@ import xyz.xmit.silverclient.utilities.SceneDirector;
 import xyz.xmit.silverclient.utilities.SilverUtilities;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 
 public final class PrimaryWindowController
@@ -65,6 +67,17 @@ public final class PrimaryWindowController
     @FXML
     public TextField tfSearchManageUsers;
 
+    private Person selectedPerson;
+
+    @FXML
+    public Button bPersonCheckouts;
+
+    @FXML
+    public Button bPersonReset;
+
+    @FXML
+    public Button bPersonBan;
+
     @FXML
     public Pane manageItemsPane;
 
@@ -92,6 +105,11 @@ public final class PrimaryWindowController
     @FXML
     public void doRefresh()
     {
+        this.selectedPerson = null;
+        this.bPersonCheckouts.setDisable(true);
+        this.bPersonReset.setDisable(true);
+        this.bPersonBan.setDisable(true);
+
         if (SilverPublisher.getInstance().hasSubscribers()) {
             var res = SilverUtilities.ShowAlertYesNoConfirmation(
                     "You have pending changes which will be overwritten by a data refresh. Are you sure?",
@@ -231,11 +249,13 @@ public final class PrimaryWindowController
 
         // First try to parse the input as a numeric barcode SKU.
         try {
-            var parsedId = Integer.parseUnsignedInt(this.tfSearchManageUsers.getText());
+            var searchText = this.tfSearchManageUsers.getText().toLowerCase();
 
             var filteredSet = this.context.getDashboardData().people.stream()
                     .filter(
-                        p -> String.valueOf(p.barcode_identifier).contains(String.valueOf(parsedId))
+                            p -> p.getDisplayName().toLowerCase().contains(searchText)
+                                    || p.getEmail().toLowerCase().contains(searchText)
+                                    || p.getIdentifier().toLowerCase().contains(searchText)
                     )
                     .toList();
 
@@ -243,25 +263,6 @@ public final class PrimaryWindowController
             newData.people = filteredSet;
 
             this.context.setDashboardDataFiltered(newData);
-        } catch (NumberFormatException ex) {
-            // If parsing a number doesn't work, just compare the string against any book titles.
-            try {
-                var searchText = this.tfSearchManageUsers.getText().toLowerCase();
-
-                var filteredSet = this.context.getDashboardData().people.stream()
-                        .filter(
-                            p -> p.display_name.toLowerCase().contains(searchText)
-                                || p.user.email.toLowerCase().contains(searchText)
-                        )
-                        .toList();
-
-                var newData = this.context.getDashboardData().createNewFromThis();
-                newData.people = filteredSet;
-
-                this.context.setDashboardDataFiltered(newData);
-            } catch (Exception innerEx) {
-                // do not crash the app when there's an exception searching...
-            }
         } catch (Exception ex) {
             // do nothing as well...
         }
@@ -360,9 +361,29 @@ public final class PrimaryWindowController
                 .setCellValueFactory(new PropertyValueFactory<>("status"));
 
         this.tablePeople.setRowFactory(tv -> {
-            var row = new TableRow<Person>();
+            var row = new TableRow<Person>() {
+                @Override
+                protected void updateItem(Person p, boolean b) {
+                    super.updateItem(p, b);
+
+                    if (p == null) return;
+
+                    getStyleClass().removeAll(Collections.singleton("person-row-banned"));
+                    getStyleClass().removeAll(Collections.singleton("person-row-staff"));
+                    getStyleClass().removeAll(Collections.singleton("person-row-self"));
+
+                    if (p.isUserBanned()) {
+                        getStyleClass().add("person-row-banned");
+                    } else if (p.isUserSelf()) {
+                        getStyleClass().add("person-row-self");
+                    } else if (p.isUserStaff()) {
+                        getStyleClass().add("person-row-staff");
+                    }
+                }
+            };
+
             row.setOnMouseClicked(event -> {
-                if (event.getClickCount() != 2 || row.isEmpty()) return;
+                if (row.isEmpty()) return;
 
                 // Deny multiple pop-up states. Only one pop-up should be available at a time.
                 if (this.context.getCurrentState() instanceof PopupSilverState)
@@ -370,14 +391,40 @@ public final class PrimaryWindowController
                     return;
                 }
 
-                // Spawn a popup window and enter a pop-up state.
-                var hookController = SceneDirector.constructPersonPopupWindow(row.getItem(), this.context);
+                if (event.getClickCount() >= 2) {
+                    // Users cannot edit themselves.
+                    if (row.getItem().isUserSelf()) {
+                        SilverUtilities.ShowAlert("You cannot edit your own profile.", "Access Denied");
 
-                ((PersonDetailController)hookController).setPersonInstance(row.getItem());
+                        return;
+                    }
 
-                var previousState = this.context.getCurrentState().getClass();
-                this.context.setCurrentState(PopupSilverState.class);
-                ((PopupSilverState)this.context.getCurrentState()).setPreviousStateClass(previousState);
+                    // Spawn a popup window and enter a pop-up state.
+                    var hookController = SceneDirector.constructPersonPopupWindow(row.getItem(), this.context);
+
+                    ((PersonDetailController)hookController).setPersonInstance(row.getItem());
+
+                    var previousState = this.context.getCurrentState().getClass();
+                    this.context.setCurrentState(PopupSilverState.class);
+                    ((PopupSilverState) this.context.getCurrentState()).setPreviousStateClass(previousState);
+                } else if (event.getClickCount() == 1) {
+                    // Users cannot edit themselves.
+                    if (row.getItem().isUserSelf()) {
+                        this.selectedPerson = null;
+
+                        this.bPersonCheckouts.setDisable(true);
+                        this.bPersonReset.setDisable(true);
+                        this.bPersonBan.setDisable(true);
+
+                        return;
+                    }
+
+                    this.selectedPerson = row.getItem();
+
+                    this.bPersonCheckouts.setDisable(false);
+                    this.bPersonReset.setDisable(false);
+                    this.bPersonBan.setDisable(false);
+                }
             });
 
             return row;

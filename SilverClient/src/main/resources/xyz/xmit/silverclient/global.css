@@ -15,10 +15,25 @@
     -fx-background-color: #fac489;
 }
 
-#mainMenuContainer .menu-button:hover, #mainMenuContainer .menu-button:focused {
+#mainMenuContainer .menu-button:hover, #mainMenuContainer {
     -fx-background-color: #fcecc4;
 }
 
 #mainMenuContainer .menu-active {
     -fx-background-color: #fcecc4 !important;
+}
+
+.person-row-banned {
+    -fx-background-color: #faa !important;
+    -fx-font-family: monospace !important;
+    -fx-font-style: italic !important;
+}
+
+.person-row-staff {
+    -fx-background-color: #aaf !important;
+}
+
+.person-row-self {
+    -fx-background-color: #8d8 !important;
+    -fx-font-style: italic !important;
 }
