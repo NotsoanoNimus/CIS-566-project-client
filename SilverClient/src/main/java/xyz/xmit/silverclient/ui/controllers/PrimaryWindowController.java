@@ -11,6 +11,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import xyz.xmit.silverclient.api.ApiFacade;
+import xyz.xmit.silverclient.api.HttpApiClient;
 import xyz.xmit.silverclient.models.HomeScreenData;
 import xyz.xmit.silverclient.models.InventoryItem;
 import xyz.xmit.silverclient.models.InventoryItemInstance;
@@ -184,6 +186,37 @@ public final class PrimaryWindowController
         } catch (Exception ex) {
             // consume the exception, but should probably actually do something here...
         }
+    }
+
+    @FXML
+    public void doPersonCheckouts()
+    {
+    }
+
+    @FXML
+    public void doPersonResetPassword()
+    {
+    }
+
+    @FXML
+    public void doPersonBan()
+    {
+        if (this.selectedPerson == null) return;
+
+        var response =
+                this.selectedPerson.isUserBanned()
+                        ? SilverUtilities.ShowAlertYesNoConfirmation("Are you sure? This person will be unbanned and regain access to the system.", "Unban User")
+                        : SilverUtilities.ShowAlertYesNoConfirmation("Are you sure? This person will be banned and lose access to the system.", "Ban User");
+
+        if (response != ButtonType.YES) return;
+
+        if (!this.selectedPerson.isUserBanned()) {
+            ApiFacade.safeApiRequest("DELETE", this.selectedPerson, Person.class, true);
+        } else {
+            ApiFacade.unbanPerson(this.selectedPerson);
+        }
+
+        this.doRefresh();
     }
 
     public void refreshDashboardData(HomeScreenData dashboardData)

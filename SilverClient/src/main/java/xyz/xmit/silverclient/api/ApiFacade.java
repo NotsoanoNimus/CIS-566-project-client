@@ -3,6 +3,7 @@ package xyz.xmit.silverclient.api;
 import xyz.xmit.silverclient.api.request.*;
 import xyz.xmit.silverclient.models.BaseModel;
 import xyz.xmit.silverclient.models.HomeScreenData;
+import xyz.xmit.silverclient.models.Person;
 import xyz.xmit.silverclient.utilities.SilverUtilities;
 
 import java.util.ArrayList;
@@ -89,39 +90,32 @@ public final class ApiFacade
     }
 
     /**
+     * Request to unbanned a given person.
+     */
+    public static void unbanPerson(Person person)
+    {
+        try {
+            var resp = HttpApiClient.getInstance().RawHttpRequest(
+                    new GenericGetRequest<>().setHostUrl("unban?personId=" + person.id), String.class);
+
+            if (resp == null || !resp.getSuccess()) {
+                throw new Exception("empty or non-success API response for unban");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+            SilverUtilities.ShowAlert("There was a problem unbanning that user.", "Failed to Unban");
+        }
+    }
+
+    /**
      * Runs a GET HTTP request against a specified API URI and expects a list of models in return.
      *
      * @param endpoint The host URI to use for fetching the list of models.
+     * @param modelClass The class type of the incoming Model.
      * @return A list of models from the specified API endpoint.
      * @param <TModel> The entity type to return. Must be a Model class.
      */
-//    @SuppressWarnings("unchecked")
-//    public static <TModel> List<TModel> fetchModelList(String endpoint)
-//    {
-//        try {
-//            var resp = HttpApiClient.getInstance().RawHttpRequest(
-//                    new GenericGetRequest<>().setHostUrl(endpoint), List.class);
-//
-//            if (resp == null || resp.getData() == null) {
-//                throw new Exception("null API response for dashboard");
-//            }
-//
-//            List<TModel> retList = new ArrayList<>();
-//
-//            for (var i : resp.getData()) {
-//                retList.add((TModel)i);
-//            }
-//
-//            return retList;
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//
-//            SilverUtilities.ShowAlert("There was a problem loading data for the dashboard.", "Failed to Fetch", true);
-//        }
-//
-//        return null;
-//    }
-
     public static <TModel> WrappedApiResponse<TModel> fetchModelList(String endpoint, Class<TModel> modelClass)
     {
         try {
