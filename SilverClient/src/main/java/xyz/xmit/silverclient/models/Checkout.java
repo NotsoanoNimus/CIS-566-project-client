@@ -1,5 +1,6 @@
 package xyz.xmit.silverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import xyz.xmit.silverclient.api.ApiFacade;
 
 import java.util.Date;
@@ -34,13 +35,22 @@ public final class Checkout
     public String notes;
 
     @Override
+    @JsonIgnore
     public String getBaseModelUri() {
         return "checkout";
     }
 
     @Override
+    @JsonIgnore
     public void commit()
     {
         ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, Checkout.class, false);
+    }
+
+    @Override
+    @JsonIgnore
+    public Class<? extends BaseModel<?>> getBaseModelClass()
+    {
+        return Checkout.class;
     }
 }

@@ -26,13 +26,22 @@ public final class Charge
     public String notes;
 
     @Override
+    @JsonIgnore
     public String getBaseModelUri() {
         return "charge";
     }
 
     @Override
+    @JsonIgnore
     public void commit()
     {
         ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, Charge.class, false);
+    }
+
+    @Override
+    @JsonIgnore
+    public Class<? extends BaseModel<?>> getBaseModelClass()
+    {
+        return Charge.class;
     }
 }

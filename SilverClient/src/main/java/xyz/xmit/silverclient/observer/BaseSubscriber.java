@@ -1,5 +1,7 @@
 package xyz.xmit.silverclient.observer;
 
+import xyz.xmit.silverclient.models.BaseModel;
+
 import java.util.UUID;
 
 public abstract class BaseSubscriber
@@ -12,4 +14,9 @@ public abstract class BaseSubscriber
     }
 
     public abstract void commit();
+
+    public Class<? extends BaseModel<?>> getBaseModelClass()
+    {
+        return null;
+    }
 }

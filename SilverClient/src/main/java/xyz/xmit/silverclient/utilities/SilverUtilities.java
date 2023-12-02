@@ -54,9 +54,11 @@ public final class SilverUtilities
             var res = ShowAlertYesNoConfirmation("You are about to log out. Would you like to commit your unsaved changes?", "Log Out");
 
             if (res == ButtonType.CANCEL) {
-                return true;
+                return false;
             } else if (res == ButtonType.YES) {
                 SilverPublisher.getInstance().commitAll();
+
+                return true;
             }
 
             System.exit(0);
@@ -76,9 +78,19 @@ public final class SilverUtilities
         ShowAlert(message, header, false);
     }
 
+    public static void ShowAlert(String message, String header, Alert.AlertType type)
+    {
+        ShowAlert(message, header, type, false);
+    }
+
     public static void ShowAlert(String message, String header, boolean exits)
     {
-        var alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
+        ShowAlert(message, header, Alert.AlertType.ERROR, exits);
+    }
+
+    public static void ShowAlert(String message, String header, Alert.AlertType type, boolean exits)
+    {
+        var alert = new Alert(type, message, ButtonType.OK);
 
         alert.setHeaderText(header);
         alert.setTitle("Error");

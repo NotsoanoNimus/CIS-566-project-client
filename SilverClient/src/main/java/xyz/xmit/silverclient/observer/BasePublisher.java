@@ -1,5 +1,7 @@
 package xyz.xmit.silverclient.observer;
 
+import xyz.xmit.silverclient.models.BaseModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +21,7 @@ public abstract class BasePublisher
      * Register a new Subscriber to the Publisher.
      * @param subscriber The Subscriber to notify.
      */
-    public void subscribe(BaseSubscriber subscriber)
+    public synchronized void subscribe(BaseSubscriber subscriber)
     {
         this.subscribers.add(subscriber);
     }
@@ -28,7 +30,7 @@ public abstract class BasePublisher
      * Unregister a current Subscriber from the Publisher.
      * @param subscriber The Subscriber to remove.
      */
-    public void unsubscribe(BaseSubscriber subscriber)
+    public synchronized void unsubscribe(BaseSubscriber subscriber)
     {
         this.subscribers.remove(subscriber);
     }
@@ -36,7 +38,7 @@ public abstract class BasePublisher
     /**
      * Notify all subscribers immediately.
      */
-    public void commitAll()
+    public synchronized void commitAll()
     {
         this.subscribers.forEach(BaseSubscriber::commit);
 
@@ -46,7 +48,7 @@ public abstract class BasePublisher
     /**
      * Unsubscribe all registered Subscribers immediately and indiscriminately.
      */
-    public void unsubscribeAll()
+    public synchronized void unsubscribeAll()
     {
         this.subscribers.clear();
     }
@@ -65,5 +67,36 @@ public abstract class BasePublisher
     public List<BaseSubscriber> getSubscribers()
     {
         return this.subscribers;
+    }
+
+    /**
+     * Returns whether the list of Subscribers already has a member with that unique ID and model type.
+     * <br />
+     * TODO: This starts to couple subscribers in the Observer to Model types specifically. But we don't
+     * want that. Find a different way to do this. Probably with a better concrete publisher.
+     */
+    @SuppressWarnings("unchecked")
+    public synchronized <TModel extends BaseModel<?>> boolean isUniqueModelAlreadySubscribed(TModel entity, Class<TModel> clazz)
+    {
+        return entity.getPrimaryId() != null
+            && this.subscribers.stream()
+                .filter(s -> s.getBaseModelClass() != null && s.getBaseModelClass().equals(clazz))
+                .anyMatch(s -> ((TModel)s).getPrimaryId().equals(entity.getPrimaryId()));
+    }
+
+    /**
+     * If found, unsubscribes a unique model entity from the list of Subscribers.
+     */
+    @SuppressWarnings("unchecked")
+    public synchronized <TModel extends BaseModel<?>> void unsubscribeUniqueModelById(TModel entity, Class<TModel> clazz)
+    {
+        if (!this.isUniqueModelAlreadySubscribed(entity, clazz) || entity.getPrimaryId() == null) return;
+
+        var toUnsubscribe = this.subscribers.stream()
+                .filter(s -> s.getBaseModelClass() != null && s.getBaseModelClass().equals(clazz))
+                .filter(s -> ((TModel)s).getPrimaryId().equals(entity.getPrimaryId()))
+                .toList();
+
+        toUnsubscribe.forEach(SilverPublisher.getInstance()::unsubscribe);
     }
 }

@@ -1,5 +1,6 @@
 package xyz.xmit.silverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import xyz.xmit.silverclient.api.ApiFacade;
 
 import java.util.Date;
@@ -38,13 +39,22 @@ public final class InventoryItemEdition
     public Date published_at;
 
     @Override
+    @JsonIgnore
     public String getBaseModelUri() {
         return "item-edition";
     }
 
     @Override
+    @JsonIgnore
     public void commit()
     {
         ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, InventoryItemEdition.class, false);
+    }
+
+    @Override
+    @JsonIgnore
+    public Class<? extends BaseModel<?>> getBaseModelClass()
+    {
+        return InventoryItemEdition.class;
     }
 }

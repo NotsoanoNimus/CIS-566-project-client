@@ -16,13 +16,22 @@ public final class Tag
     public String slug;
 
     @Override
+    @JsonIgnore
     public String getBaseModelUri() {
         return "tag";
     }
 
     @Override
+    @JsonIgnore
     public void commit()
     {
         ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, Tag.class, false);
+    }
+
+    @Override
+    @JsonIgnore
+    public Class<? extends BaseModel<?>> getBaseModelClass()
+    {
+        return Tag.class;
     }
 }

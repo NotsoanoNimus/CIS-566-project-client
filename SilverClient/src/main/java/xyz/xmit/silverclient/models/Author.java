@@ -19,13 +19,22 @@ public final class Author
     public String name;
 
     @Override
+    @JsonIgnore
     public String getBaseModelUri() {
         return "author";
     }
 
     @Override
+    @JsonIgnore
     public void commit()
     {
         ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, Author.class, false);
+    }
+
+    @Override
+    @JsonIgnore
+    public Class<? extends BaseModel<?>> getBaseModelClass()
+    {
+        return Author.class;
     }
 }

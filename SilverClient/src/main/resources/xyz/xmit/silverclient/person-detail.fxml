@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.Group?>
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.xmit.silverclient.ui.controllers.PersonDetailController">
     <children>
-        <Button fx:id="bClose" layoutX="716.0" layoutY="561.0" mnemonicParsing="false" onMouseClicked="#doClose" prefHeight="25.0" prefWidth="70.0" text="Close" />
+        <Group fx:id="gEditing" visible="false">
+            <Button fx:id="bSaveNow" onMouseClicked="#doSave" layoutX="24.0" layoutY="561.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Save Now" />
+            <Button fx:id="bSaveLater" onMouseClicked="#doSubscribe" layoutX="124.0" layoutY="561.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Save For Later" />
+            <Button fx:id="bEditCancel" onMouseClicked="#doEditCancel" layoutX="224.0" layoutY="561.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Cancel" />
+        </Group>
+        <Group fx:id="gViewing">
+            <Button fx:id="bClose" layoutX="686.0" layoutY="561.0" mnemonicParsing="false" onMouseClicked="#doClose" prefHeight="25.0" prefWidth="100.0" text="Close" />
+            <Button fx:id="bEditPerson" onMouseClicked="#doEdit" layoutX="586.0" layoutY="561.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Edit Person" />
+        </Group>
+      <Label layoutX="24.0" layoutY="14.0" text="First Name" />
+      <Label layoutX="24.0" layoutY="31.0" text="Last Name" />
     </children>
 </AnchorPane>
