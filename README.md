@@ -4,7 +4,19 @@ The client-side component of the Fall 2023 CIS-566 class group project.
 This application is created and run cross-platform using Java, with [Maven](https://maven.apache.org/what-is-maven.html) as the build system and [JavaFX](https://openjfx.io/) as the GUI.
 
 
+### Default Credentials
+There are two users available for testing:
+```text
+admin@bookwarehouse.io   (password 'admin')    - Staff
+someguy@bookwarehouse.io (password 'password') - Normal User
+```
+
+
 ### Prerequisites
+You **MUST** be running the [Silver Server](https://github.com/NotsoanoNimus/CIS-566-project-server) on _your local machine_ for any of this to work.
+    
+    If you do not use a local Silver Server, you WILL NOT be able to log in with the test users above!
+
 You need _at least_ the [most recent JRE](https://www.java.com/en/download/) version if all you plan to do is `run` the output JAR file.
 
 If you would like to `compile and run` your own JAR file from the IDE, please install the [latest JDK](https://www.oracle.com/java/technologies/downloads/). You will also need to [install JetBrains IntelliJ IDEA](https://www.jetbrains.com/idea/) (it's free to use for 30 days).
