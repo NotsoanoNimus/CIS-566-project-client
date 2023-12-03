@@ -7,5 +7,8 @@
    <children>
       <Button fx:id="bClose" layoutX="716.0" layoutY="561.0" mnemonicParsing="false" onMouseClicked="#doClose" prefHeight="25.0" prefWidth="70.0" text="Close" />
       <Button fx:id="bEditItem" layoutX="646.0" layoutY="561.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Edit Item" />
+      <Label alignment="CENTER" layoutX="127.0" layoutY="35.0" prefHeight="100.0" prefWidth="547.0" styleClass="prototype-placeholder-label" text="Space reserved for Item Properties" />
+      <Label alignment="CENTER" layoutX="127.0" layoutY="200.0" prefHeight="100.0" prefWidth="547.0" styleClass="prototype-placeholder-label" text="Space reserved for Item Checkout History" />
+      <Label alignment="CENTER" layoutX="127.0" layoutY="377.0" prefHeight="100.0" prefWidth="547.0" styleClass="prototype-placeholder-label" text="Space reserved for Item Transactions" />
    </children>
 </AnchorPane>
