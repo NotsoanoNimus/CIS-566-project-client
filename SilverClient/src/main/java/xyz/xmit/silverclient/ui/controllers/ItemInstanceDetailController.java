@@ -32,6 +32,8 @@ public final class ItemInstanceDetailController
     {
         this.context.getCurrentState().onRevertState();
 
+        this.context.getCurrentState().onRefreshData();
+
         ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
     }
 }

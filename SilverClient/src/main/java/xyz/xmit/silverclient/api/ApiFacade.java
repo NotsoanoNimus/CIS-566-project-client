@@ -204,7 +204,7 @@ public final class ApiFacade
             }
 
             if (resp == null || resp.getData() == null) {
-                throw new Exception("null API response for POST request");
+                throw new Exception("null API response for safe API request");
             }
 
             return resp;

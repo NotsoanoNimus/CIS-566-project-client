@@ -37,3 +37,13 @@
     -fx-background-color: #8d8 !important;
     -fx-font-style: italic !important;
 }
+
+.prototype-placeholder-label {
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    -fx-font-size: 24px;
+    -fx-text-fill: #d55;
+    -fx-border-width: 2px;
+    -fx-border-color: #d55;
+    -fx-background-color: #aaa;
+}

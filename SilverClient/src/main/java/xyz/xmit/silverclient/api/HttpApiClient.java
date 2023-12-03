@@ -1,5 +1,6 @@
 package xyz.xmit.silverclient.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import xyz.xmit.silverclient.api.request.*;
 import xyz.xmit.silverclient.models.BaseModel;
 
@@ -8,6 +9,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 
 
@@ -164,7 +166,15 @@ public final class HttpApiClient
                 new GenericPutRequest<>(model, blankModelClass),
                 this.authenticationContext);
 
+        connection.setDoOutput(true);
         connection.connect();
+
+        try (var outputStream = connection.getOutputStream()) {
+            var jsonInputString = new ObjectMapper().writeValueAsString(model);
+
+            var input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+            outputStream.write(input, 0, input.length);
+        }
 
         return this.<Y>readWrappedApiResponseOrDie(connection, blankModelClass);
     }
@@ -179,7 +189,15 @@ public final class HttpApiClient
                 new GenericPostRequest<>(model, blankModelClass),
                 this.authenticationContext);
 
+        connection.setDoOutput(true);
         connection.connect();
+
+        try (var outputStream = connection.getOutputStream()) {
+            var jsonInputString = new ObjectMapper().writeValueAsString(model);
+
+            var input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+            outputStream.write(input, 0, input.length);
+        }
 
         return this.<Y>readWrappedApiResponseOrDie(connection, blankModelClass);
     }

@@ -5,6 +5,7 @@ import xyz.xmit.silverclient.models.InventoryItemInstance;
 import xyz.xmit.silverclient.models.Person;
 import xyz.xmit.silverclient.ui.controllers.HookedController;
 import xyz.xmit.silverclient.ui.controllers.ItemInstanceDetailController;
+import xyz.xmit.silverclient.ui.controllers.PersonDetailController;
 import xyz.xmit.silverclient.ui.controllers.PrimaryWindowController;
 import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
 
@@ -71,12 +72,16 @@ public final class SceneDirector
      */
     public static HookedController constructPersonPopupWindow(Person instance, SilverApplicationContext context)
     {
-        return new FxmlSceneBuilder("person-detail.fxml", new Stage())
+        var personPopup = new FxmlSceneBuilder("person-detail.fxml", new Stage())
                 .setWidth(800)
                 .setHeight(600)
                 .setTitle("Person | " + instance.getDisplayName() + " | " + instance.getIdentifier())
                 .setResizeable(false)
                 .setUndecorated(true)
                 .buildWithBaseControllerAction(ItemInstanceDetailController.class, context);
+
+        ((PersonDetailController)personPopup).setPersonInstance(instance);
+
+        return personPopup;
     }
 }

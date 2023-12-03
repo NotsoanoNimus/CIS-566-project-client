@@ -148,29 +148,32 @@ public final class PrimaryWindowController
     @FXML
     public void doCommit()
     {
-        SilverPublisher.getInstance().commitAll();
+        var confirmation = SilverUtilities.ShowAlertYesNoConfirmation(
+                "Are you sure you want to commit all changes? This might take a moment.",
+                "Submit Changes");
 
-        this.gUnsavedChanges.setVisible(false);
+        if (confirmation == ButtonType.YES) {
+            SilverPublisher.getInstance().commitAll();
+
+            this.gUnsavedChanges.setVisible(false);
+
+            this.context.getCurrentState().onRefreshData();
+        }
     }
 
     @FXML
     public void doRevert()
     {
-        var confirmation = new Alert(
-                Alert.AlertType.CONFIRMATION,
+        var confirmation = SilverUtilities.ShowAlertYesNoConfirmation(
                 "Are you sure you want to revert? You will permanently lose all uncommitted changes.",
-                ButtonType.YES,
-                ButtonType.NO);
+                "Revert Changes");
 
-        confirmation.setTitle("Revert Changes");
-        confirmation.setHeaderText("Revert Changes");
-        confirmation.setResizable(false);
-        confirmation.showAndWait();
-
-        if (confirmation.getResult() == ButtonType.YES) {
+        if (confirmation == ButtonType.YES) {
             SilverPublisher.getInstance().unsubscribeAll();
 
             this.gUnsavedChanges.setVisible(false);
+
+            this.context.getCurrentState().onRefreshData();
         }
     }
 
@@ -226,6 +229,11 @@ public final class PrimaryWindowController
         if (this.tableHome.getItems() != null) this.tableHome.getItems().setAll(dashboardData.instances);
         if (this.tablePeople.getItems() != null) this.tablePeople.getItems().setAll(dashboardData.people);
         if (this.tableItems.getItems() != null) this.tableItems.getItems().setAll(dashboardData.titles);
+    }
+
+    public void flagPendingChanges()
+    {
+        this.gUnsavedChanges.setVisible(true);
     }
 
     /**
@@ -433,9 +441,7 @@ public final class PrimaryWindowController
                     }
 
                     // Spawn a popup window and enter a pop-up state.
-                    var hookController = SceneDirector.constructPersonPopupWindow(row.getItem(), this.context);
-
-                    ((PersonDetailController)hookController).setPersonInstance(row.getItem());
+                    SceneDirector.constructPersonPopupWindow(row.getItem(), this.context);
 
                     var previousState = this.context.getCurrentState().getClass();
                     this.context.setCurrentState(PopupSilverState.class);

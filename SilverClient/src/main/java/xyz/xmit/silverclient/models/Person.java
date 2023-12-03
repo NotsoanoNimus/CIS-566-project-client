@@ -21,6 +21,7 @@ public final class Person
     public int barcode_identifier;
 
     @DataField
+    @JsonIgnore
     public Integer user_id;
 
     @DataField

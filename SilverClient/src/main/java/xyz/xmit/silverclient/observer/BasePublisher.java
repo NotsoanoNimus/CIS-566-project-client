@@ -85,6 +85,22 @@ public abstract class BasePublisher
     }
 
     /**
+     * If found, returns a unique model entity instance from the list of Subscribers.
+     */
+    @SuppressWarnings("unchecked")
+    public synchronized <TModel extends BaseModel<?>> TModel getUniqueSubscriberByModelId(TModel entity, Class<TModel> clazz)
+    {
+        if (entity.getPrimaryId() == null) return null;
+
+        var subs = this.subscribers.stream()
+                .filter(s -> s.getBaseModelClass() != null && s.getBaseModelClass().equals(clazz))
+                .filter(s -> ((TModel)s).getPrimaryId().equals(entity.getPrimaryId()))
+                .toList();
+
+        return !subs.isEmpty() ? (TModel)subs.getFirst() : null;
+    }
+
+    /**
      * If found, unsubscribes a unique model entity from the list of Subscribers.
      */
     @SuppressWarnings("unchecked")

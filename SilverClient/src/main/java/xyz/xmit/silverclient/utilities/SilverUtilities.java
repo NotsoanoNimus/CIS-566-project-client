@@ -93,7 +93,7 @@ public final class SilverUtilities
         var alert = new Alert(type, message, ButtonType.OK);
 
         alert.setHeaderText(header);
-        alert.setTitle("Error");
+        alert.setTitle("Silver Alert");
         alert.setResizable(false);
 
         if (exits) {
