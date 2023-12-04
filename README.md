@@ -17,13 +17,13 @@ You **MUST** be running the [Silver Server](https://github.com/NotsoanoNimus/CIS
     
     If you do not use a local Silver Server, you WILL NOT be able to log in with the test users above!
 
-You need _at least_ the [most recent JRE](https://www.java.com/en/download/) version if all you plan to do is `run` the output JAR file.
+Install the latest JDK for Java version 21 [here](https://www.oracle.com/java/technologies/downloads/#jdk21-windows).
 
-If you would like to `compile and run` your own JAR file from the IDE, please install the [latest JDK](https://www.oracle.com/java/technologies/downloads/). You will also need to [install JetBrains IntelliJ IDEA](https://www.jetbrains.com/idea/) (it's free to use for 30 days).
+If you would like to `compile and run` your own JAR file from the IDE, you will also need to [install JetBrains IntelliJ IDEA](https://www.jetbrains.com/idea/) (it's free to use for 30 days).
 
 
 ## Running
-If all you want to do is run the output JAR file, make sure you have the JRE listed above and use [the compiled JAR file provided](silver-client.jar) with the `java -jar silver-client.jar` command.
+If all you want to do is run the output JAR file, make sure you have the JDK listed above and use [the compiled JAR file provided](silver-client.jar) with the `java -jar silver-client.jar` command.
 
 
 ## Compiling
@@ -40,8 +40,6 @@ Follow these instructions to compile and run the JAR:
 
 
 ### A Note About silver-server
-The compiled JAR file statically uses the address of our project Server at `silver.xmit.xyz`, hosted on a [DigitalOcean](https://www.digitalocean.com/) VPS.
-
 In order to change the API target to your local machine (`localhost`) when running your own [silver-server](https://github.com/NotsoanoNimus/CIS-566-project-server) instance, or to some other `silver-server` host, you can do one of the following:
 
 - If running the JAR file with `java.exe -jar NAME.jar`, set the `SILVER_TARGET_HOSTNAME` environment variable before calling the JAR.
