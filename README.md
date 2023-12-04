@@ -23,7 +23,7 @@ If you would like to `compile and run` your own JAR file from the IDE, you will 
 
 
 ## Running
-If all you want to do is run the output JAR file, make sure you have the JDK listed above and use [the compiled JAR file provided](silver-client.jar) with the `java -jar silver-client.jar` command.
+If all you want to do is run the output JAR file, make sure you have the JDK listed above and use [the compiled JAR file provided](https://raw.githubusercontent.com/NotsoanoNimus/CIS-566-project-client/master/silver-client.jar) with the `java -jar silver-client.jar` command.
 
 
 ## Compiling
