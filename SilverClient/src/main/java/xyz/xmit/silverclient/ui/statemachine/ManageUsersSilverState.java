@@ -1,6 +1,8 @@
 package xyz.xmit.silverclient.ui.statemachine;
 
 import javafx.scene.Node;
+import xyz.xmit.silverclient.api.ApiFacade;
+import xyz.xmit.silverclient.api.response.PeopleList;
 
 public final class ManageUsersSilverState
     extends BaseContainerSilverState
@@ -18,6 +20,13 @@ public final class ManageUsersSilverState
     @Override
     public void onRefreshData()
     {
+        var people = ApiFacade.fetchModelList("dashboard?specific=people", PeopleList.class);
+
+        assert people != null;
+        this.getParentContext().setPeople(people.getData().people);
+
+        this.getParentContext().getController().tfSearchManageUsers.setText("");
+        this.getParentContext().getController().onKeyFilterUsers(null);
     }
 
     @Override

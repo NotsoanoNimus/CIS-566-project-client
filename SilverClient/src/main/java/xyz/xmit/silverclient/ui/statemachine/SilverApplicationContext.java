@@ -1,10 +1,15 @@
 package xyz.xmit.silverclient.ui.statemachine;
 
 import xyz.xmit.silverclient.models.HomeScreenData;
+import xyz.xmit.silverclient.models.InventoryItem;
+import xyz.xmit.silverclient.models.InventoryItemInstance;
+import xyz.xmit.silverclient.models.Person;
+import xyz.xmit.silverclient.observer.SilverPublisher;
 import xyz.xmit.silverclient.ui.controllers.PrimaryWindowController;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class SilverApplicationContext
@@ -64,6 +69,11 @@ public final class SilverApplicationContext
         }
     }
 
+    private boolean hasUnsavedChanges()
+    {
+        return SilverPublisher.getInstance().hasSubscribers();
+    }
+
     public SilverState getCurrentState()
     {
         return this.currentState;
@@ -89,5 +99,20 @@ public final class SilverApplicationContext
     public void setDashboardDataFiltered(HomeScreenData data)
     {
         this.getController().refreshDashboardData(data);
+    }
+
+    public void setTitles(List<InventoryItem> items)
+    {
+        this.dashboardData.titles = items;
+    }
+
+    public void setPeople(List<Person> people)
+    {
+        this.dashboardData.people = people;
+    }
+
+    public void setInstances(List<InventoryItemInstance> instances)
+    {
+        this.dashboardData.instances = instances;
     }
 }

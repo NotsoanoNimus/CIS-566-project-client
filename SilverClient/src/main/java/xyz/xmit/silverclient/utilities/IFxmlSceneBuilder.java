@@ -6,17 +6,18 @@ import xyz.xmit.silverclient.ui.statemachine.SilverApplicationContext;
 
 /**
  * DESIGN PATTERN: Builder (Creational)
- * This class makes use of the Builder design pattern to manufacture clean UIs
- * (scenes with stages and stage settings), without having to ceremoniously dance
- * around using some crazy-complex constructor overloads like:
- *
+ * <br /><br />
+ * This class makes use of the Builder pattern to manufacture clean UIs (scenes with stages
+ * and stage settings), without having to ceremoniously dance around using some explosion of
+ * constructor overloads like:
  * <pre>
  *     public FxmlSceneBuilder(String resource, String[] stylesheets, boolean isLocked) { ... }
  *     public FxmlSceneBuilder(String resource, String[] stylesheets) { ... }
  * </pre>
- *
  * Instead, the method-chaining on the setter methods makes for clean usages of this class
  * in varying situations, as well as fluent (human-readable) constructions of new UI components.
+ * <br /><br />
+ * There is also a related Factory/Director for this interface in the "SceneDirector" class.
  */
 public interface IFxmlSceneBuilder
 {
@@ -63,4 +64,8 @@ public interface IFxmlSceneBuilder
     public boolean isClosesStageOnBuildError();
 
     public IFxmlSceneBuilder setClosesStageOnBuildError(boolean closesStageOnBuildError);
+
+    public IFxmlSceneBuilder setSceneUserData(Object data);
+
+    public Object getSceneUserData();
 }

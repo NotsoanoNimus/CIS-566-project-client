@@ -10,6 +10,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Duration;
+import xyz.xmit.silverclient.observer.SilverPublisher;
 
 public final class SilverUtilities
 {
@@ -30,21 +31,43 @@ public final class SilverUtilities
         timer.play();
     }
 
-    public static boolean ShowLogoutDialog()
+    public static ButtonType ShowAlertYesNoConfirmation(String message, String header)
     {
         var confirmationOfExit = new Alert(
                 Alert.AlertType.CONFIRMATION,
-                "Are you sure you want to exit? Unsaved changes will not be committed.",
+                message,
                 ButtonType.YES,
+                ButtonType.NO,
                 ButtonType.CANCEL);
 
-        confirmationOfExit.setHeaderText("Log Out");
-        confirmationOfExit.setTitle("Log Out");
+        confirmationOfExit.setHeaderText(header);
+        confirmationOfExit.setTitle(header);
         confirmationOfExit.setResizable(false);
         confirmationOfExit.showAndWait();
 
-        if (confirmationOfExit.getResult() == ButtonType.YES) {
+        return confirmationOfExit.getResult();
+    }
+
+    public static boolean ShowLogoutDialog()
+    {
+        if (SilverPublisher.getInstance().getSubscribers().size() > 1) {
+            var res = ShowAlertYesNoConfirmation("You are about to log out. Would you like to commit your unsaved changes?", "Log Out");
+
+            if (res == ButtonType.CANCEL) {
+                return false;
+            } else if (res == ButtonType.YES) {
+                SilverPublisher.getInstance().commitAll();
+
+                return true;
+            }
+
             System.exit(0);
+        } else {
+            var res = ShowAlertYesNoConfirmation("Are you sure you want to log out?", "Log Out");
+
+            if (res == ButtonType.YES) {
+                System.exit(0);
+            }
         }
 
         return false;
@@ -55,12 +78,22 @@ public final class SilverUtilities
         ShowAlert(message, header, false);
     }
 
+    public static void ShowAlert(String message, String header, Alert.AlertType type)
+    {
+        ShowAlert(message, header, type, false);
+    }
+
     public static void ShowAlert(String message, String header, boolean exits)
     {
-        var alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
+        ShowAlert(message, header, Alert.AlertType.ERROR, exits);
+    }
+
+    public static void ShowAlert(String message, String header, Alert.AlertType type, boolean exits)
+    {
+        var alert = new Alert(type, message, ButtonType.OK);
 
         alert.setHeaderText(header);
-        alert.setTitle("Error");
+        alert.setTitle("Silver Alert");
         alert.setResizable(false);
 
         if (exits) {

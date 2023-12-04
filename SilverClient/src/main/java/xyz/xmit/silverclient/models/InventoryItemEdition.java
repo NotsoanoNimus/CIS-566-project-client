@@ -1,6 +1,7 @@
 package xyz.xmit.silverclient.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import xyz.xmit.silverclient.api.ApiFacade;
 
 import java.util.Date;
 import java.util.UUID;
@@ -35,11 +36,25 @@ public final class InventoryItemEdition
     public String publisher;
 
     @DataField
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     public Date published_at;
 
     @Override
+    @JsonIgnore
     public String getBaseModelUri() {
         return "item-edition";
+    }
+
+    @Override
+    @JsonIgnore
+    public void commit()
+    {
+        ApiFacade.safeApiRequest(this.isNewModel ? "POST" : "PUT", this, InventoryItemEdition.class, false);
+    }
+
+    @Override
+    @JsonIgnore
+    public Class<? extends BaseModel<?>> getBaseModelClass()
+    {
+        return InventoryItemEdition.class;
     }
 }

@@ -1,6 +1,8 @@
 package xyz.xmit.silverclient.ui.statemachine;
 
 import javafx.scene.Node;
+import xyz.xmit.silverclient.api.ApiFacade;
+import xyz.xmit.silverclient.api.response.TitlesList;
 
 public final class ManageItemsSilverState
     extends BaseContainerSilverState
@@ -18,6 +20,13 @@ public final class ManageItemsSilverState
     @Override
     public void onRefreshData()
     {
+        var titles = ApiFacade.fetchModelList("dashboard?specific=titles", TitlesList.class);
+
+        assert titles != null;
+        this.getParentContext().setTitles(titles.getData().titles);
+
+        this.getParentContext().getController().tfSearchTitles.setText("");
+        this.getParentContext().getController().onKeyFilterTitles(null);
     }
 
     @Override

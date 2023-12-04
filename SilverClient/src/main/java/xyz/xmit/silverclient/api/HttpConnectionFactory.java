@@ -11,10 +11,10 @@ import java.util.Base64;
 
 /**
  * DESIGN PATTERN: Factory (Creational)
- * This class makes use of the Factory design pattern to manufacture HTTP or HTTPS connection
- * objects based on the parameters of the provided request object. This removes a lot of inline
- * ceremony and reduces code repetition in places where new JSON API connection requests are
- * needed.
+ * <br /><br />
+ * This class makes use of the Factory pattern to manufacture HTTP or HTTPS connection objects
+ * based on the parameters of the provided request object. This removes a lot of inline ceremony
+ * and reduces code repetition in places where new JSON API connection requests are needed.
  */
 public final class HttpConnectionFactory
 {

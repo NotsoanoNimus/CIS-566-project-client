@@ -5,11 +5,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.xmit.silverclient.ui.controllers.PrimaryWindowController">
    <VBox fx:id="mainMenuContainer" layoutY="8.0" prefHeight="596.0" prefWidth="135.0" style="-fx-background-color: #fac489;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
       <ImageView fitHeight="148.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true">
-          <Image url="@images/silver_logo.png" />
+         <Image url="@images/silver_logo.png" />
       </ImageView>
       <Button fx:id="homeButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doHome" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Home">
          <graphic>
@@ -26,7 +27,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="manageUsersButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doManageUsers" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Manage Users">
+      <Button fx:id="manageUsersButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doManageUsers" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="People">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -41,7 +42,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="manageItemsButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doManageItems" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Manage Items">
+      <Button fx:id="manageItemsButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doManageItems" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Titles">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -56,7 +57,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doLogout" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Logout">
+      <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onMouseClicked="#doLogout" prefHeight="44.0" prefWidth="135.0" styleClass="menu-button" text="Log Out">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -71,34 +72,72 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
+      <Group fx:id="gUnsavedChanges" visible="false">
+         <Label layoutX="35.0" layoutY="12.0" text="Pending changes.">
+            <padding>
+               <Insets top="10.0" />
+            </padding>
+            <font>
+               <Font name="SansSerif Italic" size="12.0" />
+            </font>
+         </Label>
+         <Button layoutX="10.0" layoutY="40.0" mnemonicParsing="false" onMouseClicked="#doRevert" prefHeight="25" prefWidth="60" text="Revert" />
+         <Button layoutX="83.0" layoutY="40.0" mnemonicParsing="false" onMouseClicked="#doCommit" prefHeight="25" prefWidth="60" text="Commit" />
+      </Group>
    </VBox>
-<!--   <StackPane layoutX="134.0" prefHeight="750.0" prefWidth="866.0">-->
-      <Pane fx:id="manageUsersPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
-      </Pane>
-      <Pane fx:id="manageItemsPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
-      </Pane>
-      <Pane fx:id="homePane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0">
+   <Pane fx:id="manageUsersPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
+      <TextField fx:id="tfSearchManageUsers" layoutX="20.0" layoutY="24.0" onKeyTyped="#onKeyFilterUsers" prefHeight="24.0" prefWidth="296.0" promptText="Search people by name, email, or ID..." />
+      <Button layoutX="316.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#doRefresh" prefHeight="24.0" text="Refresh" />
+      <Button layoutX="740.0" layoutY="24.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="100.0" text="New User" />
+      <Button fx:id="bPersonCheckouts" disable="true" layoutX="20.0" layoutY="54.0" mnemonicParsing="false" onMouseClicked="#doPersonCheckouts" prefHeight="24.0" prefWidth="100.0" text="Checkouts" />
+      <Button fx:id="bPersonReset" disable="true" layoutX="125.0" layoutY="54.0" mnemonicParsing="false" onMouseClicked="#doPersonResetPassword" prefHeight="24.0" prefWidth="100.0" text="Reset Password" />
+      <Button fx:id="bPersonBan" disable="true" layoutX="230.0" layoutY="54.0" mnemonicParsing="false" onMouseClicked="#doPersonBan" prefHeight="24.0" prefWidth="100.0" text="Toggle Ban" />
+      <TableView fx:id="tablePeople" layoutX="20.0" layoutY="84.0" prefHeight="613.0" prefWidth="820.0">
+         <columns>
+            <TableColumn prefWidth="180" text="Name" />
+            <TableColumn prefWidth="200" text="Email" />
+            <TableColumn prefWidth="100" text="Identifier" />
+            <TableColumn prefWidth="220" text="Location" />
+            <TableColumn prefWidth="100" text="Status" />
+         </columns>
+      </TableView>
+   </Pane>
+   <Pane fx:id="manageItemsPane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0" visible="false">
+      <TextField fx:id="tfSearchTitles" layoutX="20.0" layoutY="24.0" onKeyTyped="#onKeyFilterTitles" prefHeight="26.0" prefWidth="296.0" promptText="Search titles by name or author..." />
+      <Button layoutX="316.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#doRefresh" text="Refresh" />
+      <Button layoutX="635.0" layoutY="24.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="100.0" text="New Author" />
+      <Button layoutX="740.0" layoutY="24.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="100.0" text="New Title" />
+      <SplitPane dividerPositions="0.475" layoutX="20.0" layoutY="60.0" prefHeight="637.0" prefWidth="820.0">
+         <TableView fx:id="tableItems" prefWidth="350.0">
+            <columns>
+               <TableColumn prefWidth="200" text="Title" />
+               <TableColumn prefWidth="150" text="Author(s)" />
+            </columns>
+         </TableView>
+         <AnchorPane fx:id="apSelectedTitle" minHeight="100.0" minWidth="0.0" />
+      </SplitPane>
+   </Pane>
+   <Pane fx:id="homePane" layoutX="134.0" prefHeight="750.0" prefWidth="866.0">
+      <cursor>
+         <Cursor fx:constant="WAIT" />
+      </cursor>
+      <TextField fx:id="tfSearchHome" layoutX="20.0" layoutY="24.0" onKeyTyped="#onKeyFilterDashboard" prefHeight="26.0" prefWidth="296.0" promptText="Search Items by title or SKU..." />
+      <Button layoutX="316.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#doRefresh" text="Refresh" />
+      <TableView fx:id="tableHome" layoutX="20.0" layoutY="60.0" prefHeight="637.0" prefWidth="820.0">
+         <placeholder>
+            <Label fx:id="tableHomeLabel" text="Loading..." />
+         </placeholder>
+         <columns>
+            <TableColumn prefWidth="210.0" text="Item Title" />
+            <TableColumn prefWidth="100.0" text="Edition" />
+            <TableColumn prefWidth="100.0" text="SKU#" />
+            <TableColumn prefWidth="100.0" text="Status" />
+            <TableColumn prefWidth="100.0" text="Condition" />
+            <TableColumn prefWidth="180.0" text="Acquired At" />
+         </columns>
          <cursor>
             <Cursor fx:constant="WAIT" />
          </cursor>
-         <TextField fx:id="tfSearchHome" onKeyTyped="#onKeyFilterDashboard" layoutX="20.0" layoutY="24.0" prefHeight="26.0" prefWidth="296.0" promptText="Search Items by title or SKU..." />
-         <Button fx:id="bRefreshHome" onMouseClicked="#doRefresh" layoutX="316.0" layoutY="24.0" mnemonicParsing="false" text="Refresh" />
-         <TableView fx:id="tableHome" layoutX="20.0" layoutY="60.0" prefHeight="640.0" prefWidth="820.0">
-            <placeholder>
-               <Label fx:id="tableHomeLabel" text="Loading..." />
-            </placeholder>
-            <columns>
-               <TableColumn prefWidth="210.0" text="Item Title" />
-               <TableColumn prefWidth="100.0" text="Edition" />
-               <TableColumn prefWidth="100.0" text="SKU#" />
-               <TableColumn prefWidth="100.0" text="Status" />
-               <TableColumn prefWidth="100.0" text="Condition" />
-               <TableColumn prefWidth="180.0" text="Acquired At" />
-            </columns>
-            <cursor>
-               <Cursor fx:constant="WAIT" />
-            </cursor>
-         </TableView>
-      </Pane>
-<!--   </StackPane>-->
+      </TableView>
+   </Pane>
 </AnchorPane>

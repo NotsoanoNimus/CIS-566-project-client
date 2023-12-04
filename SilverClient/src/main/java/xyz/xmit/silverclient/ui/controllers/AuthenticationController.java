@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import xyz.xmit.silverclient.api.ApiFacade;
 import xyz.xmit.silverclient.utilities.FxmlSceneBuilder;
+import xyz.xmit.silverclient.utilities.SceneDirector;
 import xyz.xmit.silverclient.utilities.SilverUtilities;
 import xyz.xmit.silverclient.api.HttpApiClient;
 
@@ -71,15 +72,7 @@ public final class AuthenticationController
 
             // On request success, asynchronously pause for ~2.5 seconds then swap to the primary app scene.
             if (apiResponse.getSuccess()) {
-                SilverUtilities.RunDelayedEvent(
-                        1.25,
-                        event -> new FxmlSceneBuilder("primary-window.fxml", stageReference)
-                                    .setWidth(1000)
-                                    .setHeight(750)
-                                    .setTitle("Silver Library Management | Dashboard")
-                                    .setResizeable(false)
-                                    .setUndecorated(false)
-                                    .buildWithBaseControllerAction(PrimaryWindowController.class));
+                SilverUtilities.RunDelayedEvent(1.25, event -> SceneDirector.constructPrimaryWindow(stageReference));
 
                 return;
             }
